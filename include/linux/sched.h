@@ -1804,7 +1804,7 @@ struct task_struct {
 #ifdef CONFIG_PREEMPT_MONITOR
 	unsigned long preempt_dur;
 #endif
-
+	atomic64_t *concurrent_active_time;
 };
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
