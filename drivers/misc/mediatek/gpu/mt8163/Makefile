@@ -11,6 +11,5 @@
 # See http://www.gnu.org/licenses/gpl-2.0.html for more details.
 #
 
-
 obj-y += mali-r7p0-02rel0/drivers/
 obj-y += mediatek/

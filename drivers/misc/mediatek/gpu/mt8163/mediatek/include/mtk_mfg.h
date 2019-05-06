@@ -20,6 +20,9 @@ void mfg_dump_regs(const char * prefix);
 void mtk_mfg_enable_gpu(void);
 void mtk_mfg_disable_gpu(void);
 
+void mtk_mfg_enable_pll(void);
+void mtk_mfg_disable_pll(void);
+
 void mtk_mfg_wait_gpu_idle(void);
 
 unsigned long mtk_mfg_get_frequence(void);

@@ -203,6 +203,17 @@ do {\
 #define CHECK_MFG_STAT(off, exp_val) do{} while(0)
 #endif
 
+void mtk_mfg_enable_pll() {
+	pm_runtime_get_sync(&mfg_dev->dev);
+	if(clk_topck)
+		clk_prepare_enable(clk_topck);
+}
+
+void mtk_mfg_disable_pll() {
+	if(clk_topck)
+		clk_disable_unprepare(clk_topck);
+	pm_runtime_put_sync(&mfg_dev->dev);
+}
 
 void mtk_mfg_enable_gpu() {
 	if (mfg_start != NULL) {
