@@ -46,7 +46,7 @@ struct mtkts_bts_channel_param {
 #elif defined (CONFIG_THERMAL_DOUGLAS)
 #include "inc/mtk_ts_board_douglas.h"
 #else
-#include "inc/mtk_ts_board_abf123.h"
+#include "inc/mtk_ts_board_giza.h"
 #endif
 
 
