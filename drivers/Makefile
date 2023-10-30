@@ -165,3 +165,6 @@ obj-$(CONFIG_POWERCAP)		+= powercap/
 obj-$(CONFIG_MCB)		+= mcb/
 obj-$(CONFIG_RAS)		+= ras/
 obj-$(CONFIG_THUNDERBOLT)	+= thunderbolt/
+
+# Android non-staging drivers
+obj-$(CONFIG_ANDROID)  += android/
