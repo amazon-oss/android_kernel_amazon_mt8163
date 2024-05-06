@@ -1326,6 +1326,8 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
 	struct list_head *head = cpu_buffer->pages;
 	struct buffer_page *bpage, *tmp;
 
+	irq_work_sync(&cpu_buffer->irq_work.work);
+
 	free_buffer_page(cpu_buffer->reader_page);
 
 	rb_head_page_deactivate(cpu_buffer);
@@ -1455,6 +1457,8 @@ ring_buffer_free(struct ring_buffer *buffer)
 	cpu_notifier_register_begin();
 	__unregister_cpu_notifier(&buffer->cpu_notify);
 #endif
+
+	irq_work_sync(&buffer->irq_work.work);
 
 	for_each_buffer_cpu(buffer, cpu)
 		rb_free_cpu_buffer(buffer->buffers[cpu]);
