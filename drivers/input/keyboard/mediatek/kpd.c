@@ -35,8 +35,8 @@ void __iomem *kp_base;
 static unsigned int kp_irqnr;
 struct input_dev *kpd_input_dev;
 static bool kpd_suspend;
-static int kpd_show_hw_keycode = 1;
-static int kpd_show_register = 1;
+static int kpd_show_hw_keycode = 0;
+static int kpd_show_register = 0;
 static char call_status;
 struct wake_lock kpd_suspend_lock;	/* For suspend usage */
 
@@ -915,9 +915,9 @@ void kpd_get_dts_info(struct device_node *node)
 	of_property_read_u32(node, "mediatek,kpd-hw-map-num", &kpd_dts_data.kpd_hw_map_num);
 	of_property_read_u32_array(node, "mediatek,kpd-hw-init-map", kpd_dts_data.kpd_hw_init_map,
 		kpd_dts_data.kpd_hw_map_num);
-	/* If property is not found set to the default value of 1 */
+	/* If property is not found set to the default value of 0 */
 	if (of_property_read_u32(node, "mediatek,kpd-show-hw-keycode", &kpd_show_hw_keycode))
-		kpd_show_hw_keycode = 1;
+		kpd_show_hw_keycode = 0;
 
 	kpd_print("key-debounce = %d, sw-pwrkey = %d, hw-pwrkey = %d, hw-rstkey = %d, sw-rstkey = %d\n",
 		  kpd_dts_data.kpd_key_debounce, kpd_dts_data.kpd_sw_pwrkey, kpd_dts_data.kpd_hw_pwrkey,

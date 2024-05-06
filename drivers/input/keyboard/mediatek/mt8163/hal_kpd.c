@@ -86,10 +86,6 @@ void kpd_get_keymap_state(u16 state[])
 	state[2] = *(volatile u16 *)KP_MEM3;
 	state[3] = *(volatile u16 *)KP_MEM4;
 	state[4] = *(volatile u16 *)KP_MEM5;
-#ifndef CONFIG_MT_SND_SOC_8163_AMZN
-	kpd_print(KPD_SAY "register = %x %x %x %x %x\n", state[0], state[1],
-		state[2], state[3], state[4]);
-#endif
 }
 
 static void kpd_factory_mode_handler(void)
