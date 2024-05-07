@@ -583,8 +583,14 @@ static void hci_cc_read_local_ext_features(struct hci_dev *hdev,
 	if (hdev->max_page < rp->max_page)
 		hdev->max_page = rp->max_page;
 
-	if (rp->page < HCI_MAX_PAGES)
-		memcpy(hdev->features[rp->page], rp->features, 8);
+	switch (rp->page) {
+	case 0:
+		memcpy(hdev->features, rp->features, 8);
+		break;
+	case 1:
+		memcpy(hdev->host_features, rp->features, 8);
+		break;
+	}
 }
 
 static void hci_cc_read_flow_control_mode(struct hci_dev *hdev,
