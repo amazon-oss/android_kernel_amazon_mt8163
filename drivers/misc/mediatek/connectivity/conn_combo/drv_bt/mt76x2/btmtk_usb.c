@@ -1102,7 +1102,7 @@ static int btmtk_usb_load_rom_patch(struct btmtk_usb_data *data)
 	if (!data->rom_patch) {
 		if (LOAD_CODE_METHOD == BIN_FILE_METHOD) {
 			pr_err
-			    ("%s:please assign a rom patch(/etc/firmware/%s)or(/lib/firmware/%s)\n",
+			    ("%s:please assign a rom patch(/vendor/etc/firmware/%s)or(/lib/firmware/%s)\n",
 			     __func__, data->rom_patch_bin_file_name,
 			     data->rom_patch_bin_file_name);
 		} else {
@@ -1336,7 +1336,7 @@ static int btmtk_usb_load_fw(struct btmtk_usb_data *data)
 
 	if (!data->fw_image) {
 		if (LOAD_CODE_METHOD == BIN_FILE_METHOD) {
-			pr_warn("%s:please assign a fw(/etc/firmware/%s)or(/lib/firmware/%s)\n",
+			pr_warn("%s:please assign a fw(/vendor/etc/firmware/%s)or(/lib/firmware/%s)\n",
 			       __func__, data->fw_bin_file_name, data->fw_bin_file_name);
 		} else {
 			pr_warn("%s:please assign a fw\n", __func__);
