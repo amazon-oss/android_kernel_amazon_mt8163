@@ -62,6 +62,13 @@
 /* Default POV for ADC Input select register */
 #define DEFAULT_PGA_INPUT_SEL 0x3F
 
+/*
+ * Primary AIC3101 sits at i2c 0x18; additional ADCs follow at 0x19, 0x1a...
+ * The chip index into adc_control_data[] is (client addr - this base), so
+ * the mapping no longer depends on i2c probe order.
+ */
+#define AIC3101_PRIMARY_I2C_ADDR 0x18
+
 /* 10msec delay required to hard reset ADC per manual */
 #define RESET_LINE_DELAY 10
 
@@ -2218,20 +2225,36 @@ static int aic31xx_i2c_probe(struct i2c_client *pdev,
 	int ret = 0;
 	struct aic31xx_priv *aic31xx;
 	int enable_gpio = 0;
+	int chip_index;
 
 	static struct aic31xx_priv *aic31xx_global;
-	static int i;
 
-	dev_info(&pdev->dev, "TLV320AIC3101 Audio Codec %s (%d)\n", AIC31XX_VERSION, i);
+	/*
+	 * Derive the chip index from the i2c address so adc_control_data[] is
+	 * populated deterministically regardless of probe order:
+	 *   0x18 -> 0 (primary: owns the ASoC codec, mclk, enable-gpio, reset)
+	 *   0x19 -> 1 (secondary: handle only), etc.
+	 * (crown.dtsi: tlv320aic3101@18 / tlv320aic3101@19)
+	 */
+	chip_index = pdev->addr - AIC3101_PRIMARY_I2C_ADDR;
+	if (chip_index < 0 || chip_index >= NUM_ADC3101) {
+		dev_err(&pdev->dev, "unexpected AIC3101 i2c addr 0x%02x\n",
+			pdev->addr);
+		return -EINVAL;
+	}
 
-	if (i == 0) {
+	dev_info(&pdev->dev,
+		 "TLV320AIC3101 Audio Codec %s (idx %d, addr 0x%02x)\n",
+		 AIC31XX_VERSION, chip_index, pdev->addr);
+
+	if (chip_index == 0) {
 		aic31xx = kzalloc(sizeof(struct aic31xx_priv), GFP_KERNEL);
 		if (aic31xx == NULL) {
 			return -ENOMEM;
 		}
 		i2c_set_clientdata(pdev, aic31xx);
 		aic31xx_global = aic31xx;
-		aic31xx->adc_control_data[i] = pdev;
+		aic31xx->adc_control_data[chip_index] = pdev;
 
 		mutex_init(&aic31xx->codecMutex);
 
@@ -2310,13 +2333,19 @@ static int aic31xx_i2c_probe(struct i2c_client *pdev,
 			}
 		}
 	} else {
-		if (i >= 0 && i < NUM_ADC3101)
-			aic31xx_global->adc_control_data[i] = pdev;
+		/*
+		 * Secondary chip (e.g. 0x19): only stash its i2c handle so the
+		 * primary codec can drive it via adc_control_data[chip_index].
+		 * If the primary (0x18) hasn't allocated the shared context yet,
+		 * defer and retry so the handle is never lost to probe ordering.
+		 */
+		if (!aic31xx_global)
+			return -EPROBE_DEFER;
+
+		aic31xx_global->adc_control_data[chip_index] = pdev;
 	}
 
-	i++;
-
-	dev_info(&pdev->dev, "%s: complete (%d)\n", __func__, i);
+	dev_info(&pdev->dev, "%s: complete (idx %d)\n", __func__, chip_index);
 
 #if defined(CONFIG_MTK_KERNEL_POWER_OFF_CHARGING)
 	vibr = devm_regulator_get(&pdev->dev, "vibr");
