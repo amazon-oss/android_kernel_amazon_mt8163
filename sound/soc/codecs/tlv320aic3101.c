@@ -2212,6 +2212,33 @@ static void aic31xx_parse_dt_mode(struct i2c_client *pdev, struct aic31xx_priv *
     }
 }
 
+static int aic31xx_get_secondary_devices(struct i2c_client *pdev, struct aic31xx_priv *aic31)
+{
+	int i, ret = 0;
+	char name[8];
+
+	for (i = 1; i < NUM_ADC3101; i++) {
+		snprintf(name, sizeof(name), "adc%d", i);
+		aic31->adc_control_data[i] = i2c_new_secondary_device(pdev, name, 0);
+		if (!aic31->adc_control_data[i]) {
+			dev_err(&pdev->dev, "Failed to create secondary device %d\n", i);
+			ret = -ENODEV;
+			goto err_cleanup;
+		}
+	}
+
+	return 0;
+
+err_cleanup:
+	while (--i > 0) {
+		if (aic31->adc_control_data[i]) {
+			i2c_unregister_device(aic31->adc_control_data[i]);
+			aic31->adc_control_data[i] = NULL;
+		}
+	}
+	return ret;
+}
+
 static int aic31xx_i2c_probe(struct i2c_client *pdev,
 			     const struct i2c_device_id *id)
 {
@@ -2219,105 +2246,84 @@ static int aic31xx_i2c_probe(struct i2c_client *pdev,
 	struct aic31xx_priv *aic31xx;
 	int enable_gpio = 0;
 
-	static struct aic31xx_priv *aic31xx_global;
-	static int i;
+	dev_info(&pdev->dev, "TLV320AIC3101 Audio Codec %s\n", AIC31XX_VERSION);
 
-	dev_info(&pdev->dev, "TLV320AIC3101 Audio Codec %s (%d)\n", AIC31XX_VERSION, i);
+	aic31xx = kzalloc(sizeof(struct aic31xx_priv), GFP_KERNEL);
+	if (aic31xx == NULL) {
+		return -ENOMEM;
+	}
+	i2c_set_clientdata(pdev, aic31xx);
+	aic31xx->adc_control_data[0] = pdev;
 
-	if (i == 0) {
-		aic31xx = kzalloc(sizeof(struct aic31xx_priv), GFP_KERNEL);
-		if (aic31xx == NULL) {
-			return -ENOMEM;
-		}
-		i2c_set_clientdata(pdev, aic31xx);
-		aic31xx_global = aic31xx;
-		aic31xx->adc_control_data[i] = pdev;
+	aic31xx_parse_dt_mode(pdev, aic31xx);
 
-		mutex_init(&aic31xx->codecMutex);
+	ret = aic31xx_get_secondary_devices(pdev, aic31xx);
+	if (ret)
+		return ret;
 
-		ret = snd_soc_register_codec(&pdev->dev,
-					     &soc_codec_driver_aic31xx,
-					     tlv320aic3101_dai_driver,
-					     ARRAY_SIZE
-					     (tlv320aic3101_dai_driver));
-		if (ret)
-			dev_err(&pdev->dev,
-				"codec: %s : snd_soc_register_codec failed\n",
-				__func__);
+	mutex_init(&aic31xx->codecMutex);
 
-		/* Setup default clk config - TODO do in machine driver */
-		aic31xx->clkid = AIC3101_PLL_ADC_FS;
-		aic31xx->clksrc = AIC3101_PLL_ADC_FS_CLKIN_PLL_MCLK;
-		aic31xx->sysclk = AIC31XX_FREQ_9600000;
+	/* Setup default clk config - TODO do in machine driver */
+	aic31xx->clkid = AIC3101_PLL_ADC_FS;
+	aic31xx->clksrc = AIC3101_PLL_ADC_FS_CLKIN_PLL_MCLK;
+	aic31xx->sysclk = AIC31XX_FREQ_9600000;
 
-		aic31xx->mclk = devm_clk_get(&pdev->dev, "mclk");
-		if (IS_ERR(aic31xx->mclk)) {
-			dev_err(&pdev->dev, "%s: Failed getting mclk\n", __func__);
-			return PTR_ERR(aic31xx->mclk);
-		}
-
-		aic31xx_parse_dt_mode(pdev, aic31xx);
+	aic31xx->mclk = devm_clk_get(&pdev->dev, "mclk");
+	if (IS_ERR(aic31xx->mclk)) {
+		dev_err(&pdev->dev, "%s: Failed getting mclk\n", __func__);
+		return PTR_ERR(aic31xx->mclk);
+	}
 
 #ifdef CONFIG_ACPI
-		if (!ACPI_HANDLE(&pdev->dev)) {
-			dev_err(&pdev_dev, "Not a valid ACPI device\n");
+	if (!ACPI_HANDLE(&pdev->dev)) {
+		dev_err(&pdev_dev, "Not a valid ACPI device\n");
+		return -EINVAL;
+	}
+
+	if (!aic31xx->disable_reset) {
+		aic31xx->enable_gpiod =
+			devm_gpiod_get_index(&pdev->dev, "aic3101_enable",
+						0);
+		if (IS_ERR_OR_NULL(aic31xx->enable_gpiod)) {
+			dev_err(&pdev->dev, "Failed to get enable gpio!\n");
+			return -EINVAL;
+		}
+	}
+#else
+	if (!aic31xx->disable_reset) {
+		enable_gpio = of_get_named_gpio(pdev->dev.of_node, "enable-gpio", 0);
+		if (enable_gpio < 0) {
+			dev_err(&pdev->dev, "Failed to get enable gpio from device tree!\n");
 			return -EINVAL;
 		}
 
-		if (!aic31xx->disable_reset) {
-			aic31xx->enable_gpiod =
-				devm_gpiod_get_index(&pdev->dev, "aic3101_enable",
-							0);
-			if (IS_ERR_OR_NULL(aic31xx->enable_gpiod)) {
-				dev_err(&pdev->dev, "Failed to get enable gpio!\n");
-				return -EINVAL;
-			}
+		ret = devm_gpio_request_one(&pdev->dev, enable_gpio, 0, "aic3101_enable");
+		if (ret < 0) {
+			dev_err(&pdev->dev, "Failed to request enable gpio! %d\n", ret);
+			return -EINVAL;
 		}
-#else
-		if (!aic31xx->disable_reset) {
-			enable_gpio = of_get_named_gpio(pdev->dev.of_node, "enable-gpio", 0);
-			if (enable_gpio < 0) {
-				dev_err(&pdev->dev, "Failed to get enable gpio from device tree!\n");
-				return -EINVAL;
-			}
-
-			ret = devm_gpio_request_one(&pdev->dev, enable_gpio, 0, "aic3101_enable");
-			if (ret < 0) {
-				dev_err(&pdev->dev, "Failed to request enable gpio! %d\n", ret);
-				return -EINVAL;
-			}
-		}
-
-		aic31xx->enable_gpiod = gpio_to_desc(enable_gpio);
-#endif
-		if (!aic31xx->disable_reset) {
-			/* Reset ADC */
-			ret = gpiod_direction_output(aic31xx->enable_gpiod, 0);
-			if (ret < 0) {
-				dev_err(&pdev->dev,
-					"could not set gpio(%d) to 0 (err=%d)\n",
-					enable_gpio, ret);
-				return -EINVAL;
-			}
-			/* Hold it down for required time */
-			mdelay(RESET_LINE_DELAY);
-			ret = gpiod_direction_output(aic31xx->enable_gpiod, 1);
-			if (ret < 0) {
-				dev_err(&pdev->dev,
-					"could not set gpio(%d) to 1 (err=%d)\n",
-					enable_gpio, ret);
-				return -EINVAL;
-			}
-		}
-	} else {
-		if (i >= 0 && i < NUM_ADC3101)
-			aic31xx_global->adc_control_data[i] = pdev;
 	}
-
-	i++;
-
-	dev_info(&pdev->dev, "%s: complete (%d)\n", __func__, i);
-
+	aic31xx->enable_gpiod = gpio_to_desc(enable_gpio);
+#endif
+	if (!aic31xx->disable_reset) {
+		/* Reset ADC */
+		ret = gpiod_direction_output(aic31xx->enable_gpiod, 0);
+		if (ret < 0) {
+			dev_err(&pdev->dev,
+				"could not set gpio(%d) to 0 (err=%d)\n",
+				enable_gpio, ret);
+			return -EINVAL;
+		}
+		/* Hold it down for required time */
+		mdelay(RESET_LINE_DELAY);
+		ret = gpiod_direction_output(aic31xx->enable_gpiod, 1);
+		if (ret < 0) {
+			dev_err(&pdev->dev,
+				"could not set gpio(%d) to 1 (err=%d)\n",
+				enable_gpio, ret);
+			return -EINVAL;
+		}
+	}
 #if defined(CONFIG_MTK_KERNEL_POWER_OFF_CHARGING)
 	vibr = devm_regulator_get(&pdev->dev, "vibr");
 	if (IS_ERR(vibr)) {
@@ -2340,6 +2346,18 @@ static int aic31xx_i2c_probe(struct i2c_client *pdev,
 		}
 	}
 #endif
+
+	ret = snd_soc_register_codec(&pdev->dev,
+				     &soc_codec_driver_aic31xx,
+				     tlv320aic3101_dai_driver,
+				     ARRAY_SIZE
+				     (tlv320aic3101_dai_driver));
+	if (ret)
+		dev_err(&pdev->dev,
+			"codec: %s : snd_soc_register_codec failed\n",
+			__func__);
+
+	dev_info(&pdev->dev, "%s: complete\n", __func__);
 
 	return ret;
 }
