@@ -1146,6 +1146,7 @@ static const struct aic31xx_configs biquad_settings_Capt_IDC[] = {
 	{0x2055, 0x21},		/* reg[4][85] = 33 */
 	{0x2056, 0x81},		/* reg[4][86] = 129 */
 	{0x2057, 0xba},		/* reg[4][87] = 186 */
+#if defined CONFIG_SND_SOC_8_MICS || defined CONFIG_SND_SOC_4_MICS
 	/*    Coefficient write to 3101-B ADC Left
 	      Page change to 4
 	 */
@@ -1172,12 +1173,15 @@ static const struct aic31xx_configs biquad_settings_Capt_IDC[] = {
 	{0x2155, 0x21},		/* reg[4][85] = 33 */
 	{0x2156, 0x81},		/* reg[4][86] = 129 */
 	{0x2157, 0xba},		/* reg[4][87] = 186 */
+#endif
 
 	/* config record path default gains */
 	{ADC_LEFT_APGA_CTRL(0), MIC_PGA_GAIN_IDC},	/* PGA 20dB Gain */
 	{ADC_RIGHT_APGA_CTRL(0), MIC_PGA_GAIN_IDC},	/* PGA 20dB Gain */
+#if defined CONFIG_SND_SOC_8_MICS || defined CONFIG_SND_SOC_4_MICS
 	{ADC_LEFT_APGA_CTRL(1), MIC_PGA_GAIN_IDC},	/* PGA 20dB Gain */
 	{ADC_RIGHT_APGA_CTRL(1), MIC_PGA_GAIN_IDC},	/* PGA 20dB Gain */
+#endif
 };
 
 /**----------------------------------------------------------------------------
