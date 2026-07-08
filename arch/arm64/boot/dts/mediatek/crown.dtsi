@@ -350,17 +350,13 @@
 
 	tlv320aic3101@18 {
 		compatible = "ti,tlv320aic3101";
-		reg = <0x18>;
+		reg = <0x18>, <0x19>;
+		reg-names = "adc0", "adc1";
 		enable-gpio = <&pio 24 0>;
 		/* disable_reset=1, reset control by FPGA */
 		disable_reset = <1>;
 		clocks = <&clk26m>;
 		clock-names = "mclk";
-	};
-
-	tlv320aic3101@19 {
-		compatible = "ti,tlv320aic3101";
-		reg = <0x19>;
 	};
 };
 

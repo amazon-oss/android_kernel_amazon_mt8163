@@ -341,11 +341,6 @@
 		clocks = <&clk26m>;
 		clock-names = "mclk";
 	};
-
-	tlv320aic3101@19 {
-		compatible = "ti,tlv320aic3101";
-		reg = <0x19>;
-	};
 };
 
 &i2c1 {
