@@ -1422,6 +1422,7 @@
 		spi-max-frequency = <100000000>;
 		gpios = <&pio 51 0>;
 		fpga-cdone-gpio = <&pio 49 0>;
+		amzn,mic-downmix;
 		pinctrl-names = "default",
 				"audpmicclk-mode0",
 				"audpmicclk-mode1",

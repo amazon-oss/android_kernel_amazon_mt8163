@@ -87,6 +87,7 @@ struct amzn_spi_priv {
 	bool keep_copying;
 	uint32_t min_spi_wait_usec;
 	uint32_t max_spi_wait_usec;
+	bool mic_downmix;
 #if defined SPI_USES_LOCAL_DMA || defined SPI_USES_HDMI_BUFFER
 	struct snd_dma_buffer *capture_dma_buf;
 #endif
@@ -104,6 +105,20 @@ static void spi_data_read(struct work_struct *work);
 
 /* Disable timestamp transfer by default */
 static int transfer_timestamps_enab = SPI_HEADER_DISABLE;
+
+static inline s32 spi_rd24(const u8 *p)
+{
+	s32 v = p[0] | (p[1] << 8) | (p[2] << 16);
+
+	return (v & 0x800000) ? (v - (1 << 24)) : v;
+}
+
+static inline void spi_wr24(u8 *p, s32 v)
+{
+	p[0] = v & 0xff;
+	p[1] = (v >> 8) & 0xff;
+	p[2] = (v >> 16) & 0xff;
+}
 
 /* TODO(DEE-30199): Remove global decalartaion */
 static struct amzn_spi_priv spi_data;
@@ -562,6 +577,20 @@ static void spi_data_read(struct work_struct *work)
 			goto delay;
 		}
 
+		if (spi_priv_data->mic_downmix && SPI_N_CHANNELS >= 2) {
+			u16 f;
+
+			for (f = 0; f < rx_df->dsf.num_audio_frames; f++) {
+				u8 *fr = rx_df->daf[f].audio_data;
+				s32 s0 = spi_rd24(fr);
+				s32 s1 = spi_rd24(fr + SPI_BYTES_PER_CHANNEL);
+				s32 mix = (s0 + s1) / 2;
+
+				spi_wr24(fr, mix);
+				spi_wr24(fr + SPI_BYTES_PER_CHANNEL, mix);
+			}
+		}
+
 		prev_fpga_ts = rx_df->dsf.timestamp_48mhz;
 		if (transfer_timestamps_enab) {
 			n_bytes = (rx_df->dsf.num_audio_frames+1) *
@@ -987,7 +1016,11 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 	dev_set_name(&spi->dev, "%s", AMZN_MT_SPI_PCM);
 	spi_set_drvdata(spi, &spi_data);
 
-	pr_info("%s: dev name %s\n", __func__, dev_name(&spi->dev));
+	spi_data.mic_downmix =
+		of_property_read_bool(spi->dev.of_node, "amzn,mic-downmix");
+
+	pr_info("%s: dev name %s (mic_downmix=%d)\n", __func__,
+		dev_name(&spi->dev), spi_data.mic_downmix);
 
 	/* Initialize I2S Pins going to FPGA */
 	AudDrv_GPIO_probe(&spi->dev);
