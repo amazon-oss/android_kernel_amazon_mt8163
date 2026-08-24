@@ -168,6 +168,7 @@
 #define OV9726_SENSOR_ID                        0x9726
 #define OV9726MIPI_SENSOR_ID                    0x9726
 #define OV9734MIPI_SENSOR_ID                    0x9734
+#define OV02BMIPI_SENSOR_ID                     0x02B
 #define OV8865_SENSOR_ID                        0x8865
 #define OV8858_SENSOR_ID                        0x8858
 #define OV8858S_SENSOR_ID                      (0x8858+1)
