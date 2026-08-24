@@ -32,11 +32,8 @@
 #include "kd_imgsensor_errcode.h"
 
 
-#if defined(CONFIG_CAMERA_MULTIMODAL)
+/* cronos mounts the sensor rotated 180 degrees */
 #define ov02b_MIRROR_HV
-#else
-#define ov02b_MIRROR_NORMAL
-#endif
 
 #if defined(ov02b_MIRROR_NORMAL)
 #define MIRROR 0x00
