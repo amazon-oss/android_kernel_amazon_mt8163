@@ -1207,50 +1207,25 @@ static kal_uint32 feature_control(MSDK_SENSOR_FEATURE_ENUM feature_id,
                         switch (*feature_data_32)
                         {
                         case MSDK_SCENARIO_ID_CAMERA_CAPTURE_JPEG:
-                                if (copy_to_user((void __user *) wininfo,
-                                        (void *) &imgsensor_winsize_info[1],
-                                        sizeof(struct SENSOR_WINSIZE_INFO_STRUCT)))
-                                {
-                                        LOG_INF("copy to user failed\n");
-                                        return -EFAULT;
-                                }
+                                memcpy((void *)wininfo, (void *)&imgsensor_winsize_info[1],
+				       sizeof(struct SENSOR_WINSIZE_INFO_STRUCT));
                                 break;
                         case MSDK_SCENARIO_ID_VIDEO_PREVIEW:
-                                if (copy_to_user((void __user *) wininfo,
-                                        (void *) &imgsensor_winsize_info[2],
-                                        sizeof(struct SENSOR_WINSIZE_INFO_STRUCT)))
-                                {
-                                        LOG_INF("copy to user failed\n");
-                                        return -EFAULT;
-                                }
+                                memcpy((void *)wininfo, (void *)&imgsensor_winsize_info[2],
+				       sizeof(struct SENSOR_WINSIZE_INFO_STRUCT));
                                 break;
                         case MSDK_SCENARIO_ID_HIGH_SPEED_VIDEO:
-                                if (copy_to_user((void __user *) wininfo,
-                                        (void *) &imgsensor_winsize_info[3],
-                                        sizeof(struct SENSOR_WINSIZE_INFO_STRUCT)))
-                                {
-                                        LOG_INF("copy to user failed\n");
-                                        return -EFAULT;
-                                }
+                                memcpy((void *)wininfo, (void *)&imgsensor_winsize_info[3],
+				       sizeof(struct SENSOR_WINSIZE_INFO_STRUCT));
                                 break;
                         case MSDK_SCENARIO_ID_SLIM_VIDEO:
-                                if (copy_to_user((void __user *) wininfo,
-                                        (void *) &imgsensor_winsize_info[4],
-                                        sizeof(struct SENSOR_WINSIZE_INFO_STRUCT)))
-                                {
-                                        LOG_INF("copy to user failed\n");
-                                        return -EFAULT;
-                                }
+                                memcpy((void *)wininfo, (void *)&imgsensor_winsize_info[4],
+				       sizeof(struct SENSOR_WINSIZE_INFO_STRUCT));
                                 break;
                         case MSDK_SCENARIO_ID_CAMERA_PREVIEW:
                         default:
-                                if (copy_to_user((void __user *) wininfo,
-                                        (void *) &imgsensor_winsize_info[0],
-                                        sizeof(struct SENSOR_WINSIZE_INFO_STRUCT)))
-                                {
-                                        LOG_INF("copy to user failed\n");
-                                        return -EFAULT;
-                                }
+                                memcpy((void *)wininfo, (void *)&imgsensor_winsize_info[0],
+				       sizeof(struct SENSOR_WINSIZE_INFO_STRUCT));
                                 break;
                         }
                         break;
