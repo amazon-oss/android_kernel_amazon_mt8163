@@ -538,7 +538,7 @@ static bool g_log_def_constraint = 100;
 
 static int g_bWaitLock;
 
-static atomic_t g_imem_ref_cnt[ISP_REF_CNT_ID_MAX];
+static atomic_t g_imem_ref_cnt[ISP_REF_CNT_ID_MAX_FRMB];
 
 static atomic_t g_EnableClkCnt = ATOMIC_INIT(0);
 
@@ -2963,7 +2963,8 @@ static long ISP_REF_CNT_CTRL_FUNC(unsigned long Param)
 				ref_cnt_ctrl.id);
 		}
 
-		if (ref_cnt_ctrl.id < ISP_REF_CNT_ID_MAX) {
+		if ((unsigned int)ref_cnt_ctrl.id <
+		    (unsigned int)ISP_REF_CNT_ID_MAX_FRMB) {
 			/* lock here */
 			spin_lock(&(g_IspInfo.SpinLockIspRef));
 
@@ -6211,7 +6212,7 @@ static signed int ISP_open(struct inode *pInode, struct file *pFile)
 
 	atomic_set(&(g_IspInfo.HoldInfo.HoldEnable), 0);
 	atomic_set(&(g_IspInfo.HoldInfo.WriteEnable), 0);
-	for (i = 0; i < ISP_REF_CNT_ID_MAX; i++) {
+	for (i = 0; i < ISP_REF_CNT_ID_MAX_FRMB; i++) {
 		atomic_set(&g_imem_ref_cnt[i], 0);
 	}
 
