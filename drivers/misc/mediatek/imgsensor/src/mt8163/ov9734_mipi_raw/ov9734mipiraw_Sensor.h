@@ -16,11 +16,7 @@
 #ifndef _OV9734MIPI_SENSOR_H
 #define _OV9734MIPI_SENSOR_H
 
-#if defined(CONFIG_CAMERA_MULTIMODAL)
 #define ov9734_MIRROR_V
-#else
-#define ov9734_MIRROR_NORMAL
-#endif
 
 
 #if defined(ov9734_MIRROR_NORMAL)
