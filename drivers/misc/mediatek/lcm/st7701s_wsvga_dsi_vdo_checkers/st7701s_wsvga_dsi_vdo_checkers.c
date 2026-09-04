@@ -1042,7 +1042,7 @@ static void init_checkers_st7701s_truly_lcm(void)
 /* vendor suggest proto and hvt KD lcm can share the same initial code */
 static void init_checkers_st7701s_protokd_lcm(void)
 {
-	push_table(lcm_initialization_setting_protokd, sizeof(lcm_initialization_setting_kd_ctp) / sizeof(struct LCM_setting_table), 1);
+	push_table(lcm_initialization_setting_protokd, sizeof(lcm_initialization_setting_protokd) / sizeof(struct LCM_setting_table), 1);
 }
 
 static void init_checkers_st7701s_kd_ctp_lcm(void)
@@ -1052,12 +1052,12 @@ static void init_checkers_st7701s_kd_ctp_lcm(void)
 
 static void init_checkers_st7701s_kd_inx_lcm(void)
 {
-	push_table(lcm_initialization_setting_kd_inx, sizeof(lcm_initialization_setting_kd_ctp) / sizeof(struct LCM_setting_table), 1);
+	push_table(lcm_initialization_setting_kd_inx, sizeof(lcm_initialization_setting_kd_inx) / sizeof(struct LCM_setting_table), 1);
 }
 
 static void init_checkers_st7701s_kd_hsd_lcm(void)
 {
-	push_table(lcm_initialization_setting_kd_hsd, sizeof(lcm_initialization_setting_kd_ctp) / sizeof(struct LCM_setting_table), 1);
+	push_table(lcm_initialization_setting_kd_hsd, sizeof(lcm_initialization_setting_kd_hsd) / sizeof(struct LCM_setting_table), 1);
 }
 
 static void init_checkers_st7701s_inx_lcm(void)
