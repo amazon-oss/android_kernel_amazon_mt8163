@@ -5367,7 +5367,7 @@ static long ISP_ioctl(struct file *pFile, unsigned int Cmd, unsigned long Param)
 				lock_key = DebugFlag[1];
 			spin_lock_irqsave(&(IspInfo_FrmB.SpinLockIrq[lock_key]),
 					  flags);
-			IspInfo_FrmB.DebugMask = DebugFlag[0];
+			IspInfo_FrmB.DebugMask = DebugFlag[0] & ~ISP_DBG_INT;
 			spin_unlock_irqrestore(
 				&(IspInfo_FrmB.SpinLockIrq[lock_key]), flags);
 			/* LOG_DBG("FBC kernel debug level =
