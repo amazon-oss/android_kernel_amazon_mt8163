@@ -25,6 +25,7 @@
 #include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/input.h>
+#include <misc/privacy.h>
 
 #define DEFAULT_DEBOUNCE_INTERVAL 5
 
@@ -83,6 +84,8 @@ struct privacy_priv {
 	struct privacy_button_event *button_event;
 	struct delayed_work work;
 };
+
+static struct privacy_priv *privacy;
 
 /* Forward declarations: */
 static enum privacy_state __privacy_state(struct privacy_priv *priv);
@@ -645,6 +648,15 @@ static enum privacy_state __privacy_state(struct privacy_priv *priv)
 	return PRIVACY_STATE_OFF;
 }
 
+bool camera_shuttered(void)
+{
+	if (!privacy)
+		return false;
+
+	return __privacy_state(privacy) == PRIVACY_STATE_ON;
+}
+EXPORT_SYMBOL(camera_shuttered);
+
 static int __set_privacy_enable(struct privacy_priv *priv)
 {
 	int i = 0;
@@ -832,6 +844,9 @@ static int gpio_privacy_probe(struct platform_device *pdev)
 	}
 
 	device_init_wakeup(&pdev->dev, priv->button_event->wakeup_capable);
+
+	privacy = priv;
+
 	return 0;
 }
 
@@ -847,6 +862,8 @@ static int gpio_privacy_remove(struct platform_device *pdev)
 	state_warning_event = priv->state_warning_event;
 	state_event = priv->state_event;
 	button_event = priv->button_event;
+
+	privacy = NULL;
 
 	if (priv->auto_toggle_enable_gpio_time >= 0)
 		cancel_delayed_work_sync(&priv->work);

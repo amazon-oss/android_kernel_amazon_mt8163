@@ -25,4 +25,6 @@ enum gating_state {
 /* register a srcu notifier call by providing a notifier block */
 int register_gating_state_notifier(struct notifier_block *nb);
 
+int gating_state_get(void);
+
 #endif

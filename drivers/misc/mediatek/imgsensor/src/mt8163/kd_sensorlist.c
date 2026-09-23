@@ -62,6 +62,7 @@
 #if !defined(CONFIG_MTK_LEGACY)
 #include <linux/regulator/consumer.h>
 #endif /* !defined(CONFIG_MTK_LEGACY) */
+#include <misc/privacy.h>
 
 /* Camera information */
 #define PROC_CAMERA_INFO "driver/camera_info"
@@ -1427,6 +1428,27 @@ static inline int adopt_CAMERA_HW_Open(void)
 	return err ? -EIO : err;
 }				/* adopt_CAMERA_HW_Open() */
 
+static void kd_set_camera_info(MUINT32 idx)
+{
+	static char name_tmp[camera_info_size];
+
+	memset(name_tmp, 0, camera_info_size);
+	snprintf(name_tmp, camera_info_size, "%s CAM[%d]:%s;", mtk_ccm_name,
+		 g_invokeSocketIdx[idx], g_invokeSensorNameStr[idx]);
+	memcpy(mtk_ccm_name, name_tmp, camera_info_size);
+}
+
+static bool kd_shuttered_sensor_alive(void)
+{
+	if (!camera_shuttered())
+		return false;
+
+	PK_INFO("camera is shuttered, reporting the sensor as present\n");
+	kd_set_camera_info(KDIMGSENSOR_INVOKE_DRIVER_0);
+
+	return true;
+}
+
 static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 {
 	MUINT32 err = 0;
@@ -1434,9 +1456,11 @@ static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 	MUINT32 i = 0;
 	MUINT32 sensorID = 0;
 	MUINT32 retLen = 0;
-	static char mtk_ccm_name_tmp[camera_info_size] = { 0 };
 
 	KD_IMGSENSOR_PROFILE_INIT();
+	/* Camera information */
+	if (gDrvIndex == 0x10000)
+		memset(mtk_ccm_name, 0, camera_info_size);
 	/* power on sensor */
 	err =
 		kdModulePowerOn((enum CAMERA_DUAL_CAMERA_SENSOR_ENUM *)
@@ -1446,6 +1470,9 @@ static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 	/* Bypass redundant search operation of getting sensor ID, */
 	/* if power on failed */
 	if (err != ERROR_NONE) {
+		if (kd_shuttered_sensor_alive())
+			return ERROR_NONE;
+
 		PK_ERR("%s\n",
 			err ==
 			-ENODEV ? "No device in this socket position" :
@@ -1460,10 +1487,6 @@ static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 	g_CurrentSensorIdx = 0;
 	/* Search sensor keep i2c debug log */
 	g_IsSearchSensor = 1;
-	/* Camera information */
-	if (gDrvIndex == 0x10000)
-		memset(mtk_ccm_name, 0, camera_info_size);
-
 
 	if (g_pSensorFunc) {
 		for (i = KDIMGSENSOR_INVOKE_DRIVER_0;
@@ -1485,13 +1508,7 @@ static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 
 					PK_DBG("Sensor found ID = 0x%x\n",
 						sensorID);
-					memset(mtk_ccm_name_tmp, 0, camera_info_size);
-					snprintf(mtk_ccm_name_tmp,
-						 camera_info_size,
-						 "%s CAM[%d]:%s;", mtk_ccm_name,
-						 g_invokeSocketIdx[i],
-						 g_invokeSensorNameStr[i]);
-					memcpy(mtk_ccm_name, mtk_ccm_name_tmp, camera_info_size);
+					kd_set_camera_info(i);
 					err = ERROR_NONE;
 				}
 				if (err != ERROR_NONE) {
@@ -1517,6 +1534,9 @@ static inline int adopt_CAMERA_HW_CheckIsAlive(void)
 	KD_IMGSENSOR_PROFILE("CheckIsAlive");
 
 	g_IsSearchSensor = 0;
+
+	if (err != ERROR_NONE && kd_shuttered_sensor_alive())
+		err = ERROR_NONE;
 
 	return err ? -EIO : err;
 }				/* adopt_CAMERA_HW_Open() */

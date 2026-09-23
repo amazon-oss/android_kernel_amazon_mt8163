@@ -94,10 +94,17 @@ static enum gating_state conf_cam_gate(enum gating_state state)
 /* set_gate_state() : check and configure the camera gating state */
 static enum gating_state set_gate_state(enum gating_state state)
 {
+	int latch;
+
 	if (!cam_gate)
 		return state;
 
+	latch = gating_state_get();
+
 	mutex_lock(&cam_gate->mutex);
+
+	if (latch == UNGATED || latch == GATED)
+		cam_gate->req_state = latch;
 
 	/* Make sure device is in UNGATED Mode before trying to enable CAM */
 	if (state == UNGATED && cam_gate->req_state != UNGATED) {

@@ -24,6 +24,7 @@
 #include <linux/module.h>
 #include <linux/input.h>
 #include <misc/gating.h>
+#include <misc/privacy.h>
 #include <linux/gpio/consumer.h>
 
 #define DEFAULT_DEBOUNCE_INTERVAL 5
@@ -53,6 +54,7 @@ struct gating_priv {
 };
 
 static struct srcu_notifier_head *priv_nh;
+static struct gating_priv *gating;
 
 int register_gating_state_notifier(struct notifier_block *nb)
 {
@@ -78,6 +80,32 @@ static enum gating_state __gating_state(struct gating_priv *priv)
 
 	return value;
 }
+
+int gating_state_get(void)
+{
+	enum gating_state state;
+
+	if (!gating)
+		return -ENODEV;
+
+	mutex_lock(&gating->mutex);
+
+	if (gating->cur_state == ONGOING)
+		state = ONGOING;
+	else
+		state = __gating_state(gating);
+
+	mutex_unlock(&gating->mutex);
+
+	return state;
+}
+EXPORT_SYMBOL(gating_state_get);
+
+bool camera_shuttered(void)
+{
+	return gating_state_get() == GATED;
+}
+EXPORT_SYMBOL(camera_shuttered);
 
 static int __set_gating_state(struct gating_priv *priv, int enable)
 {
@@ -338,28 +366,10 @@ static int gating_input_event_parse_of(struct platform_device *pdev)
 	return 0;
 }
 
-static enum gating_state gating_state(struct device *dev)
-{
-	enum gating_state state;
-	struct platform_device *pdev = to_platform_device(dev);
-	struct gating_priv *priv = platform_get_drvdata(pdev);
-
-	mutex_lock(&priv->mutex);
-
-	if (priv->cur_state == ONGOING)
-		state = ONGOING;
-	else
-		state = __gating_state(priv);
-
-	mutex_unlock(&priv->mutex);
-
-	return state;
-}
-
 static ssize_t show_gating_state(struct device *dev,
 				  struct device_attribute *attr, char *buf)
 {
-	int state = gating_state(dev);
+	int state = gating_state_get();
 
 	if (state < 0)
 		return state;
@@ -467,6 +477,7 @@ static int gating_probe(struct platform_device *pdev)
 	}
 
 	priv->input_event->priv = priv;
+	priv->cur_state = __gating_state(priv);
 	priv->req_state = NONE;
 	INIT_WORK(&priv->priv_update, gating_update_work_func);
 
@@ -490,6 +501,8 @@ static int gating_probe(struct platform_device *pdev)
 		device_init_wakeup(&pdev->dev,
 					priv->input_event->wakeup_capable);
 
+	gating = priv;
+
 	dev_info(dev, "%s : done\n", __func__);
 
 	return 0;
@@ -503,6 +516,8 @@ static int gating_remove(struct platform_device *pdev)
 
 	priv = platform_get_drvdata(pdev);
 	priv_event = priv->input_event;
+
+	gating = NULL;
 
 	devm_free_irq(dev,
 		      gpiod_to_irq(priv->state_gpio),

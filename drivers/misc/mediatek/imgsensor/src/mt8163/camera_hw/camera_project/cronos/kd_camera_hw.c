@@ -21,6 +21,8 @@
 #include <linux/of.h>
 #include <asm/atomic.h>
 
+#include <misc/privacy.h>
+
 #include "kd_camera_hw.h"
 
 #include "kd_imgsensor.h"
@@ -342,6 +344,11 @@ int kdCISModulePowerOn(enum CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *curr
 		pinSetIdx = 2;
 
 	if (On) {
+		if (camera_shuttered()) {
+			pr_info("Failed to enable CAM, privacy is ON\n");
+			goto _kdCISModulePowerOn_exit_;
+		}
+
         /* VCAM_I2C */
 #ifdef NEED_MANUAL_VCAMI2C_POWER
 		if (TRUE != _hwPowerOnCnt(pinSetIdx, VCAMI2C, VOL_1800, mode_name)) {
