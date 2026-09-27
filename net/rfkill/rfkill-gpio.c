@@ -16,6 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <linux/delay.h>
 #include <linux/gpio.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -37,6 +38,9 @@ struct rfkill_gpio_data {
 	struct clk		*clk;
 
 	bool			clk_enabled;
+
+	u32			poweron_delay;
+	u32			poweroff_delay;
 };
 
 static int rfkill_gpio_set_power(void *data, bool blocked)
@@ -53,6 +57,11 @@ static int rfkill_gpio_set_power(void *data, bool blocked)
 		clk_disable(rfkill->clk);
 
 	rfkill->clk_enabled = !blocked;
+
+	if (blocked && rfkill->poweroff_delay)
+		msleep(rfkill->poweroff_delay);
+	else if (!blocked && rfkill->poweron_delay)
+		msleep(rfkill->poweron_delay);
 
 	return 0;
 }
@@ -112,6 +121,11 @@ static int rfkill_gpio_probe(struct platform_device *pdev)
 		rfkill->name = dev_name(&pdev->dev);
 
 	rfkill->type = rfkill_find_type(type_name);
+
+	device_property_read_u32(&pdev->dev, "poweron-delay",
+				 &rfkill->poweron_delay);
+	device_property_read_u32(&pdev->dev, "poweroff-delay",
+				 &rfkill->poweroff_delay);
 
 	if (ACPI_HANDLE(&pdev->dev)) {
 		ret = rfkill_gpio_acpi_probe(&pdev->dev, rfkill);
