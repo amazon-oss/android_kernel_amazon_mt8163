@@ -126,6 +126,8 @@
 		label = "bluetooth";
 		radio-type = "bluetooth";
 		shutdown-gpios = <&pio 28 0>;
+		poweron-delay = <150>;
+		poweroff-delay = <50>;
 		default-blocked;
 	};
 };
