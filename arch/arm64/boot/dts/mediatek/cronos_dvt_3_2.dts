@@ -97,52 +97,35 @@
 	compatible = "amazon,virtual_sensor";
 	#thermal-sensor-cells = <0>;
 
-	zone-list {
-		zone-names = "therm0_s", "therm1_s", "therm2_s", "mtktscpu";
-		therm0_s = <0 38700 417 482 (-40000) 125000>;
-		therm1_s = <1 51200 3 35 (-40000) 125000>;
-		therm2_s = <1 62900 5 26 (-40000) 125000>;
-		mtktscpu = <0 0 0 0 0 0>;
-	};
+	sensor-list-count = <5>;
+	sensor-list = <&therm0 0 38700 417 482>,
+	              <&therm1 1 51200 3 35>,
+	              <&therm2 1 62900 5 26>;
 };
 
 &case_virtual_sensor {
 	compatible = "amazon,virtual_sensor";
 	#thermal-sensor-cells = <0>;
 
-	zone-list {
-		zone-names = "therm0_s", "therm1_s", "therm2_s", "mtktscpu";
-		therm0_s = <0 0 0 0 (-40000) 125000>;
-		therm1_s = <0 0 0 0 (-40000) 125000>;
-		therm2_s = <0 0 0 0 (-40000) 125000>;
-		mtktscpu = <0 0 100 1000 0 0>;
-	};
+	sensor-list-count = <5>;
+	sensor-list = <&cpu_sensor 0 0 100 1000>;
 };
 
 &dcorner_virtual_sensor {
 	compatible = "amazon,virtual_sensor";
 	#thermal-sensor-cells = <0>;
 
-	zone-list {
-		zone-names = "therm0_s", "therm1_s", "therm2_s", "mtktscpu";
-		therm0_s = <1 50300 100 3060 (-40000) 125000>;
-		therm1_s = <0 0 0 0 (-40000) 125000>;
-		therm2_s = <1 74300 100 (-2230) (-40000) 125000>;
-		mtktscpu = <0 0 0 0 0 0>;
-	};
+	sensor-list-count = <5>;
+	sensor-list = <&therm0 1 50300 100 3060>,
+	              <&therm2 1 74300 100 (-2230)>;
 };
 
 &cpu_virtual_sensor {
 	compatible = "amazon,virtual_sensor";
 	#thermal-sensor-cells = <0>;
 
-	zone-list {
-		zone-names = "therm0_s", "therm1_s", "therm2_s", "mtktscpu";
-		therm0_s = <0 0 0 0 (-40000) 125000>;
-		therm1_s = <0 0 0 0 (-40000) 125000>;
-		therm2_s = <0 0 0 0 (-40000) 125000>;
-		mtktscpu = <0 0 800 1000 0 0>;
-	};
+	sensor-list-count = <5>;
+	sensor-list = <&cpu_sensor 0 0 800 1000>;
 };
 
 &codec {

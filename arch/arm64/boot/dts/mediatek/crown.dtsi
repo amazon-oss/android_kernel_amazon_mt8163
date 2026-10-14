@@ -119,31 +119,24 @@
 		aux_channel_num = <3>;
 	};
 
+	cpu_sensor: cpu-sensor {
+		compatible = "amazon,mtkscpu_sensor";
+	};
+
 	skin_virtual_sensor: skin-virtual-sensor {
 		compatible = "amazon,virtual_sensor";
 		#thermal-sensor-cells = <0>;
 
-		zone-list {
-			zone-names = "therm0_s", "therm1_s", "therm2_s", "therm3_s", "mtktscpu";
-			therm0_s = <0 (-61100) 1000 8 (-40000) 125000>;
-			therm1_s = <0 0 0 0 (-40000) 125000>;
-			therm2_s = <0 0 0 0 (-40000) 125000>;
-            therm3_s = <0 16100 266 759 (-40000) 125000>;
-			mtktscpu = <0 0 0 0 0 0>;
-		};
+		sensor-list-count = <5>;
+		sensor-list = <&therm0 0 (-61100) 1000 8>,
+		              <&therm3 0 16100 266 759>;
 	};
 
 	case_virtual_sensor: case-virtual-sensor {
 		compatible = "amazon,virtual_sensor";
 		#thermal-sensor-cells = <0>;
-		zone-list {
-			zone-names = "therm0_s", "therm1_s", "therm2_s", "therm3_s", "mtktscpu";
-			therm0_s = <0 0 0 0 (-40000) 125000>;
-			therm1_s = <0 0 0 0 (-40000) 125000>;
-			therm2_s = <0 0 0 0 (-40000) 125000>;
-			therm3_s = <0 0 0 0 (-40000) 125000>;
-			mtktscpu = <0 0 100 1000 0 0>;
-		};
+		sensor-list-count = <5>;
+		sensor-list = <&cpu_sensor 0 0 100 1000>;
 	};
 
 	wifi_cooler: wifi {
