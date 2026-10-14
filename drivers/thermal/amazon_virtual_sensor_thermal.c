@@ -507,6 +507,14 @@ static int virtual_sensor_thermal_probe(struct platform_device *pdev)
 			}
 		}
 
+		if (!vtdev->tdev) {
+			put_device(&phys_sensor->dev);
+			of_node_put(args.np);
+			mutex_unlock(&virtual_sensor_dev_lock);
+			mutex_unlock(&virtual_thermal_zone_lock);
+			return -EPROBE_DEFER;
+		}
+
 		if (args.args[0] > 0)
 			offset_sign = 1;
 		else
