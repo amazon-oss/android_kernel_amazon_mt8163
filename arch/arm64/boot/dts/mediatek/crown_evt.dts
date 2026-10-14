@@ -58,6 +58,7 @@
 		gpios = <&pio 142 GPIO_ACTIVE_LOW>;
 		linux,input-type = <EV_SW>;
 		linux,code = <SW_CAMERA_LENS_COVER>;
+		linux,can-disable;
 	};
 };
 
