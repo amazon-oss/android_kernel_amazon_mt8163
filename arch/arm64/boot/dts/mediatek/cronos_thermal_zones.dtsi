@@ -26,8 +26,38 @@
 
 			/* svt is short for skin_virtual_thermal */
 			trips {
-				svt_trip_critical1: trip-point@0 {
-					temperature = <58000>;
+				svt_trip: trip-point@0 {
+					temperature = <43000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+				svt_trip1: trip-point@1 {
+					temperature = <49000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+				svt_trip2: trip-point@2 {
+					temperature = <49500>;
+					hysteresis = <400>;
+					type = "passive";
+				};
+				svt_trip3: trip-point@3 {
+					temperature = <51000>;
+					hysteresis = <1400>;
+					type = "passive";
+				};
+				svt_trip4: trip-point@4 {
+					temperature = <52000>;
+					hysteresis = <800>;
+					type = "passive";
+				};
+				svt_trip5: trip-point@5 {
+					temperature = <54000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+				svt_trip_critical1: trip-point@6 {
+					temperature = <56000>;
 					hysteresis = <0>;
 					type = "critical";
 				};
@@ -44,7 +74,47 @@
 
 			/* cvt is short for case_virtual_thermal */
 			trips {
-				cvt_trip_critical1: trip-point@0 {
+				cvt_trip: trip-point@0 {
+					temperature = <87000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+				cvt_trip1: trip-point@1 {
+					temperature = <90000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+				cvt_trip2: trip-point@2 {
+					temperature = <95000>;
+					hysteresis = <4000>;
+					type = "passive";
+				};
+				cvt_trip3: trip-point@3 {
+					temperature = <97000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+				cvt_trip4: trip-point@4 {
+					temperature = <100000>;
+					hysteresis = <2500>;
+					type = "passive";
+				};
+				cvt_trip5: trip-point@5 {
+					temperature = <103000>;
+					hysteresis = <2500>;
+					type = "passive";
+				};
+				cvt_trip6: trip-point@6 {
+					temperature = <106000>;
+					hysteresis = <2500>;
+					type = "passive";
+				};
+				cvt_trip7: trip-point@7 {
+					temperature = <108000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+				cvt_trip_critical1: trip-point@8 {
 					temperature = <110000>;
 					hysteresis = <0>;
 					type = "critical";
