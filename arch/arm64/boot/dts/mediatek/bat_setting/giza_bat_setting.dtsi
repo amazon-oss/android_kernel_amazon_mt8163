@@ -16,6 +16,8 @@
 	max_charge_temperature = <60>;
 	max_charge_temperature_minus_x_degree = <60>;
 
+	max_charging_time = <72000>; /* 20*60*60 */
+
 	/* charger error check */
 	bat_low_temp_protect_enable = <0>;
 	v_charger_enable = <0>;	/* 1:on , 0:off */
