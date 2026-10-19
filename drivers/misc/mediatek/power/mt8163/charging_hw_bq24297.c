@@ -180,7 +180,11 @@ static unsigned int charging_hw_init(void *data)
 #else
 	bq24297_set_iprechg(0x3);	/* Precharge current 512mA */
 #endif
+#if defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+	bq24297_set_iterm(0x0);		/* Termination current 128mA */
+#else
 	bq24297_set_iterm(0x1);		/* Termination current 256mA (C/20) */
+#endif
 
 #if !defined(CONFIG_MTK_JEITA_STANDARD_SUPPORT)
 	bq24297_set_vreg(0x2C);	/* VREG 4.208V */
