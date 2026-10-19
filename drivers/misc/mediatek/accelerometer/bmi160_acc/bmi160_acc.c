@@ -36,10 +36,10 @@
 #include <linux/of_irq.h>
 #include <linux/of_gpio.h>
 
-#include <linux/hwmsensor.h>
-#include <linux/hwmsen_dev.h>
-#include <linux/sensors_io.h>
-#include <linux/hwmsen_helper.h>
+#include <hwmsensor.h>
+#include <hwmsen_dev.h>
+#include <sensors_io.h>
+#include <hwmsen_helper.h>
 */
 #include <linux/module.h>
 #include <linux/irq.h>
@@ -3319,6 +3319,20 @@ static int bmi160_acc_resume(struct i2c_client *client)
 	return 0;
 }
 
+static int bmi160_acc_pm_suspend(struct device *dev)
+{
+	return bmi160_acc_suspend(to_i2c_client(dev), PMSG_SUSPEND);
+}
+
+static int bmi160_acc_pm_resume(struct device *dev)
+{
+	return bmi160_acc_resume(to_i2c_client(dev));
+}
+
+static const struct dev_pm_ops bmi160_acc_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(bmi160_acc_pm_suspend, bmi160_acc_pm_resume)
+};
+
 #else				/*CONFIG_HAS_EARLY_SUSPEND is defined */
 
 static void bmi160_acc_early_suspend(struct early_suspend *h)
@@ -3371,13 +3385,12 @@ static struct i2c_driver bmi160_acc_i2c_driver = {
 #ifdef CONFIG_OF
 		   .of_match_table = accel_of_match,
 #endif
+#if !defined(CONFIG_HAS_EARLYSUSPEND)
+		   .pm = &bmi160_acc_pm_ops,
+#endif
 		   },
 	.probe = bmi160_acc_i2c_probe,
 	.remove = bmi160_acc_i2c_remove,
-#if !defined(CONFIG_HAS_EARLYSUSPEND)
-	.suspend = bmi160_acc_suspend,
-	.resume = bmi160_acc_resume,
-#endif
 	.id_table = bmi160_acc_i2c_id,
 };
 
@@ -4673,10 +4686,7 @@ static int bmi160_acc_i2c_remove(struct i2c_client *client)
 		GSE_ERR("delete device attribute failed.\n");
 	}
 
-	err = misc_deregister(&bmi160_acc_device);
-	if (err) {
-		GSE_ERR("misc_deregister fail: %d\n", err);
-	}
+	misc_deregister(&bmi160_acc_device);
 
 	bmi160_acc_i2c_client = NULL;
 	i2c_unregister_device(client);
