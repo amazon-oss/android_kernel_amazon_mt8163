@@ -330,6 +330,7 @@ extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_checkers_st_protokd_lcm_drv;
 extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_checkers_st_kd_inx_lcm_drv;
 extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_checkers_st_kd_hsd_lcm_drv;
 extern struct LCM_DRIVER nt35521_wxga_dsi_vdo_douglas_lcm_drv;
+extern struct LCM_DRIVER nt35521_wxga_dsi_vdo_giza_lcm_drv;
 extern struct LCM_DRIVER jd936x_wxga_dsi_vdo_crown_st_inx_lcm_drv;
 extern struct LCM_DRIVER jd936x_wxga_dsi_vdo_crown_st_kd_inx_lcm_drv;
 extern struct LCM_DRIVER jd936x_wxga_dsi_vdo_crown_st_kd_hsd_lcm_drv;
