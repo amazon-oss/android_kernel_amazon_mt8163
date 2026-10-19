@@ -294,6 +294,13 @@ config LEDS_LP8501
 	  It is similar as LP5523, but output power selection is available.
 	  And register layout and engine program schemes are different.
 
+config LEDS_LP855X
+	tristate "LED support for the TI LP855X Backlight Driver"
+	depends on LEDS_CLASS
+	default n
+	help
+	  This option enables support for the TI LP855X Backlight Driver .
+
 config LEDS_LP8788
 	tristate "LED support for the TI LP8788 PMIC"
 	depends on LEDS_CLASS
