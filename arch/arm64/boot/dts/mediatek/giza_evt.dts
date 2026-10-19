@@ -55,7 +55,7 @@
 
 	/* chosen */
 	chosen {
-		bootargs = "console=ttyS0,921600n1 root=/dev/ram initrd=0x44000200,0x200000";
+		bootargs = "console=ttyMT0,921600n1 root=/dev/ram initrd=0x44000200,0x200000";
 	};
 
 	mtcpufreq {
