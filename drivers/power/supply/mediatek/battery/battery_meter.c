@@ -1118,8 +1118,11 @@ int __batt_meter_init_cust_data_from_dt(void)
 	batt_meter_cust_data.slp_current = DEFAULT_SLP_CURRENT;
 	__batt_meter_parse_node(np, "slp_current",
 			&batt_meter_cust_data.slp_current);
+	batt_meter_cust_data.slp_current_wifi =
+		batt_meter_cust_data.slp_current;
 	__batt_meter_parse_node(np, "slp_current_wifi",
 			&batt_meter_cust_data.slp_current_wifi);
+	g_slp_current = batt_meter_cust_data.slp_current;
 
 	of_node_put(np);
 
