@@ -33,10 +33,10 @@
 #include <linux/atomic.h>
 #include <linux/mutex.h>
 #include <linux/module.h>
-#include <linux/hwmsensor.h>
-#include <linux/hwmsen_dev.h>
-#include <linux/sensors_io.h>
-#include <linux/hwmsen_helper.h>
+#include <hwmsensor.h>
+#include <hwmsen_dev.h>
+#include <sensors_io.h>
+#include <hwmsen_helper.h>
 */
 #include <linux/module.h>
 #include <gyroscope.h>
@@ -1740,6 +1740,20 @@ static int bmg_resume(struct i2c_client *client)
 	return 0;
 }
 
+static int bmg_pm_suspend(struct device *dev)
+{
+	return bmg_suspend(to_i2c_client(dev), PMSG_SUSPEND);
+}
+
+static int bmg_pm_resume(struct device *dev)
+{
+	return bmg_resume(to_i2c_client(dev));
+}
+
+static const struct dev_pm_ops bmg_pm_ops = {
+	SET_SYSTEM_SLEEP_PM_OPS(bmg_pm_suspend, bmg_pm_resume)
+};
+
 static int bmg_i2c_detect(struct i2c_client *client, struct i2c_board_info *info)
 {
 	strcpy(info->type, BMG_DEV_NAME);
@@ -1922,9 +1936,7 @@ static int bmg_i2c_remove(struct i2c_client *client)
 	if (err)
 		GYRO_ERROR("bmg_delete_attr failed, err = %d\n", err);
 
-	err = misc_deregister(&bmg_device);
-	if (err)
-		GYRO_ERROR("misc_deregister failed, err = %d\n", err);
+	misc_deregister(&bmg_device);
 
 	obj_i2c_data = NULL;
 	i2c_unregister_device(client);
@@ -1946,12 +1958,11 @@ static struct i2c_driver bmg_i2c_driver = {
 #ifdef CONFIG_OF
 		   .of_match_table = gyro_of_match,
 #endif
+		   .pm = &bmg_pm_ops,
 		   },
 	.probe = bmg_i2c_probe,
 	.remove = bmg_i2c_remove,
 	.detect = bmg_i2c_detect,
-	.suspend = bmg_suspend,
-	.resume = bmg_resume,
 	.id_table = bmg_i2c_id,
 };
 
