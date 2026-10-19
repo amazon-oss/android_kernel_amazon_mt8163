@@ -1335,9 +1335,6 @@ int force_get_tbat(bool update)
 		return 25;
 	}
 
-	if ((update == false) && (pre_bat_temperature_val == -1))
-		return pre_bat_temperature_val;
-
 	/* Get V_BAT_Temperature */
 	bat_temperature_volt = 2;
 	ret = battery_meter_ctrl(BATTERY_METER_CMD_GET_ADC_V_BAT_TEMP,
