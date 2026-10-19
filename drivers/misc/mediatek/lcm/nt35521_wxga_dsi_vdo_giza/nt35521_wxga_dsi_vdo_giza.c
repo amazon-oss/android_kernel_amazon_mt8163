@@ -141,8 +141,10 @@ static void lcm_set_pwr_n(int val)
 }
 
 
-static int lcm_probe(struct device *dev)
+static int lcm_probe(struct platform_device *pdev)
 {
+	struct device *dev = &pdev->dev;
+
 	lcm_get_vio_supply(dev);
 	lcm_get_gpio(dev);
 
@@ -155,10 +157,10 @@ static const struct of_device_id lcm_of_ids[] = {
 };
 
 static struct platform_driver lcm_driver = {
+	.probe = lcm_probe,
 	.driver = {
 		   .name = "mtk_lcm",
 		   .owner = THIS_MODULE,
-		   .probe = lcm_probe,
 #ifdef CONFIG_OF
 		   .of_match_table = lcm_of_ids,
 #endif
