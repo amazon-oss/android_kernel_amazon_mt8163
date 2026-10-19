@@ -4826,11 +4826,13 @@ static void battery_timer_resume(void)
 
 	if (is_pcm_timer_trigger == true || bat_spm_timeout) {
 		mutex_lock(&bat_mutex);
+#if !defined(CONFIG_DOUGLAS) && !defined(CONFIG_GIZA)
 		if (bat_spm_timeout && (BMT_status.UI_SOC > BMT_status.SOC)) {
 			pr_warn("[%s] replace ui_soc(%d) with soc(%d)\n",
 				__func__, BMT_status.UI_SOC, BMT_status.SOC);
 			BMT_status.UI_SOC = BMT_status.SOC;
 		}
+#endif
 
 		BAT_thread();
 		mutex_unlock(&bat_mutex);
