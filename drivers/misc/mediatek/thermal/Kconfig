@@ -72,6 +72,12 @@ config THERMAL_DOUGLAS
         help
           For DOUGLAS specific configurations for thermal related.
 
+config THERMAL_GIZA
+        bool "THERMAL_GIZA"
+        default n
+        help
+          For GIZA specific configurations for thermal related.
+
 config THERMAL_CROWN
 	bool "THERMAL_CROWN"
 	default n
