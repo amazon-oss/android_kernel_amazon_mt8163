@@ -15,6 +15,11 @@ config DOUGLAS
 	help
 	isolate amazon Douglas changes for MTK Platform
 
+config GIZA
+	bool "Giza MTK platform project"
+	help
+	isolate amazon Giza changes for MTK Platform
+
 config CROWN
 	bool "Crown MTK platform project"
 	help
