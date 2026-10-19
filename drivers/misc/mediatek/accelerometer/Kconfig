@@ -17,5 +17,6 @@ config CUSTOM_KERNEL_ACCELEROMETER
           driver configuration should be configured as well.
 
 source "drivers/misc/mediatek/accelerometer/bma253/Kconfig"
+source "drivers/misc/mediatek/accelerometer/bmi160_acc/Kconfig"
 source "drivers/misc/mediatek/accelerometer/lsm6ds3g/Kconfig"
 source "drivers/misc/mediatek/accelerometer/mc3416/Kconfig"
