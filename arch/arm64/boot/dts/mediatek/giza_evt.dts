@@ -91,27 +91,30 @@
 	/* Virtual sensor thermistor */
 	thermistor@0 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <5250>;
-		thermistor,offset.sign = "plus";
-		thermistor,alpha = <10>;
-		thermistor,weight = <175>;
+		thermal_thermistor,offset = <5250>;
+		thermal_thermistor,offset_invert = <0>;
+		thermal_thermistor,alpha = <10>;
+		thermal_thermistor,weight = <175>;
 		aux_channel_num = <0>;
+		select_device = <0>;
 	};
 	thermistor@1 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <2900>;
-		thermistor,offset.sign = "plus";
-		thermistor,alpha = <10>;
-		thermistor,weight = <175>;
+		thermal_thermistor,offset = <2900>;
+		thermal_thermistor,offset_invert = <0>;
+		thermal_thermistor,alpha = <10>;
+		thermal_thermistor,weight = <175>;
 		aux_channel_num = <1>;
+		select_device = <1>;
 	};
 	thermistor@2 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <3000>;
-		thermistor,offset.sign = "minus";
-		thermistor,alpha = <10>;
-		thermistor,weight = <175>;
+		thermal_thermistor,offset = <3000>;
+		thermal_thermistor,offset_invert = <1>;
+		thermal_thermistor,alpha = <10>;
+		thermal_thermistor,weight = <175>;
 		aux_channel_num = <2>;
+		select_device = <0>;
 	};
 };
 
