@@ -527,7 +527,7 @@
 
 	accdet_pins_eint_as_int: eint4 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_26_EINT4__FUNC_GPIO26>;
+			pinmux = <MT8163_PIN_26_EINT4__FUNC_GPIO26>;
 			bias-disable;
 		};
 	};
@@ -542,7 +542,7 @@
 
 	bq24297_chg_en_pin: bq24297_chg_en_pin {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_22_EINT0__FUNC_GPIO22>;
+			pinmux = <MT8163_PIN_22_EINT0__FUNC_GPIO22>;
 			slew-rate = <1>;
 			bias-disable;
 			output-low;
@@ -551,7 +551,7 @@
 
 	alsps_intpin_cfg: alspspincfg {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_52_EINT20__FUNC_GPIO52>;
+			pinmux = <MT8163_PIN_52_EINT20__FUNC_GPIO52>;
 			slew-rate = <0>;
 			bias-pull-up = <00>;
 		};
@@ -565,12 +565,12 @@
 
 	aud_pins_extamp_high: audexamphigh {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_28_EINT6__FUNC_GPIO28>;
+			pinmux = <MT8163_PIN_28_EINT6__FUNC_GPIO28>;
 			slew-rate = <1>;
 			output-high;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_29_EINT7__FUNC_GPIO29>;
+			pinmux = <MT8163_PIN_29_EINT7__FUNC_GPIO29>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -578,12 +578,12 @@
 
 	aud_pins_extamp_low: audexamplow {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_28_EINT6__FUNC_GPIO28>;
+			pinmux = <MT8163_PIN_28_EINT6__FUNC_GPIO28>;
 			slew-rate = <1>;
 			output-low;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_29_EINT7__FUNC_GPIO29>;
+			pinmux = <MT8163_PIN_29_EINT7__FUNC_GPIO29>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -591,7 +591,7 @@
 
 	aud_pins_hpamp_high: audhpamphigh {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_44_EINT12__FUNC_GPIO44>;
+			pinmux = <MT8163_PIN_44_EINT12__FUNC_GPIO44>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -599,7 +599,7 @@
 
 	aud_pins_hpamp_low: audhpamplow {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_44_EINT12__FUNC_GPIO44>;
+			pinmux = <MT8163_PIN_44_EINT12__FUNC_GPIO44>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -607,7 +607,7 @@
 
 	aud_pins_FSA8409_off: audFSA8409off {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_27_EINT5__FUNC_GPIO27>;
+			pinmux = <MT8163_PIN_27_EINT5__FUNC_GPIO27>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -615,7 +615,7 @@
 
 	aud_pins_FSA8409_on: audFSA8409on {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_27_EINT5__FUNC_GPIO27>;
+			pinmux = <MT8163_PIN_27_EINT5__FUNC_GPIO27>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -623,49 +623,49 @@
 
 	aud_pins_i2s1_mode0: audi2s1mode0 {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
+			pinmux = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_47_EINT15__FUNC_GPIO47>;
+			pinmux = <MT8163_PIN_47_EINT15__FUNC_GPIO47>;
 		};
 		pins_cmd2_dat {
-			pins = <MT8163_PIN_48_EINT16__FUNC_GPIO48>;
+			pinmux = <MT8163_PIN_48_EINT16__FUNC_GPIO48>;
 		};
 	};
 
 	aud_pins_i2s1_mode1: audi2s1mode1 {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_46_EINT14__FUNC_I2S1_DO>;
+			pinmux = <MT8163_PIN_46_EINT14__FUNC_I2S1_DO>;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_47_EINT15__FUNC_I2S1_LRCK>;
+			pinmux = <MT8163_PIN_47_EINT15__FUNC_I2S1_LRCK>;
 		};
 		pins_cmd2_dat {
-			pins = <MT8163_PIN_48_EINT16__FUNC_I2S1_BCK>;
+			pinmux = <MT8163_PIN_48_EINT16__FUNC_I2S1_BCK>;
 		};
 	};
 
 	aud_pins_pmicclk_mode0: pmicclkmode0 {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_7_AUD_CLK_MOSI__FUNC_GPIO7>;
+			pinmux = <MT8163_PIN_7_AUD_CLK_MOSI__FUNC_GPIO7>;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_8_AUD_DAT_MISO__FUNC_GPIO8>;
+			pinmux = <MT8163_PIN_8_AUD_DAT_MISO__FUNC_GPIO8>;
 		};
 		pins_cmd2_dat {
-			pins = <MT8163_PIN_9_AUD_DAT_MOSI__FUNC_GPIO9>;
+			pinmux = <MT8163_PIN_9_AUD_DAT_MOSI__FUNC_GPIO9>;
 		};
 	};
 
 	aud_pins_pmicclk_mode1: pmicclkmode1 {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_7_AUD_CLK_MOSI__FUNC_AUD_CLK_MOSI>;
+			pinmux = <MT8163_PIN_7_AUD_CLK_MOSI__FUNC_AUD_CLK_MOSI>;
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_8_AUD_DAT_MISO__FUNC_AUD_DAT_MISO>;
+			pinmux = <MT8163_PIN_8_AUD_DAT_MISO__FUNC_AUD_DAT_MISO>;
 		};
 		pins_cmd2_dat {
-			pins = <MT8163_PIN_9_AUD_DAT_MOSI__FUNC_AUD_DAT_MOSI>;
+			pinmux = <MT8163_PIN_9_AUD_DAT_MOSI__FUNC_AUD_DAT_MOSI>;
 		};
 	};
 
@@ -673,56 +673,56 @@
 	/* Project Dependency : tb8163m1 */
 	camera_pins_cam0_rst0: cam0@0 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_53_SPI_CS__FUNC_GPIO53>;/*GPIO_CAMERA_CMRST_PIN*/
+			pinmux = <MT8163_PIN_53_SPI_CS__FUNC_GPIO53>;/*GPIO_CAMERA_CMRST_PIN*/
 			slew-rate = <1>; /*direction 0:in, 1:out*/
 			output-low;/*direction out used only. output_low or high*/
 		};
 	};
 	camera_pins_cam0_rst1: cam0@1 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_53_SPI_CS__FUNC_GPIO53>;/*GPIO_CAMERA_CMRST_PIN*/
+			pinmux = <MT8163_PIN_53_SPI_CS__FUNC_GPIO53>;/*GPIO_CAMERA_CMRST_PIN*/
 			slew-rate = <1>;
 			output-high;
 		};
 	};
 	camera_pins_cam0_pnd0: cam0@2 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_56_SPI_MO__FUNC_GPIO56>;/*GPIO_CAMERA_CMPDN_PIN*/
+			pinmux = <MT8163_PIN_56_SPI_MO__FUNC_GPIO56>;/*GPIO_CAMERA_CMPDN_PIN*/
 			slew-rate = <1>;
 			output-low;
 		};
 	};
 	camera_pins_cam0_pnd1: cam0@3 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_56_SPI_MO__FUNC_GPIO56>;/*GPIO_CAMERA_CMPDN_PIN*/
+			pinmux = <MT8163_PIN_56_SPI_MO__FUNC_GPIO56>;/*GPIO_CAMERA_CMPDN_PIN*/
 			slew-rate = <1>;
 			output-high;
 		};
 	};
 	camera_pins_cam1_rst0: cam1@0 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_55_SPI_MI__FUNC_GPIO55>;/*GPIO_CAMERA_CMRST1_PIN*/
+			pinmux = <MT8163_PIN_55_SPI_MI__FUNC_GPIO55>;/*GPIO_CAMERA_CMRST1_PIN*/
 			slew-rate = <1>; /*direction 0:in, 1:out*/
 			output-low;/*direction out used only. output_low or high*/
 		};
 	};
 	camera_pins_cam1_rst1: cam1@1 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_55_SPI_MI__FUNC_GPIO55>;/*GPIO_CAMERA_CMRST1_PIN*/
+			pinmux = <MT8163_PIN_55_SPI_MI__FUNC_GPIO55>;/*GPIO_CAMERA_CMRST1_PIN*/
 			slew-rate = <1>;
 			output-high;
 		};
 	};
 	camera_pins_cam1_pnd0: cam1@2 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_54_SPI_CK__FUNC_GPIO54>;/*GPIO_CAMERA_CMPDN1_PIN*/
+			pinmux = <MT8163_PIN_54_SPI_CK__FUNC_GPIO54>;/*GPIO_CAMERA_CMPDN1_PIN*/
 			slew-rate = <1>;
 			output-low;
 		};
 	};
 	camera_pins_cam1_pnd1: cam1@3 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_54_SPI_CK__FUNC_GPIO54>;/*GPIO_CAMERA_CMPDN1_PIN*/
+			pinmux = <MT8163_PIN_54_SPI_CK__FUNC_GPIO54>;/*GPIO_CAMERA_CMPDN1_PIN*/
 			slew-rate = <1>;
 			output-high;
 		};
@@ -731,14 +731,14 @@
 /*
 	camera_pins_cam_ldo0_0: cam@0 {
 		pins_cmd_dat {
-			pins = <PINMUX_GPIO68__FUNC_GPIO68>;
+			pinmux = <PINMUX_GPIO68__FUNC_GPIO68>;
 			slew-rate = <1>;
 			output-low;
 		};
 	};
 	camera_pins_cam_ldo0_1: cam@1 {
 		pins_cmd_dat {
-			pins = <PINMUX_GPIO68__FUNC_GPIO68>;
+			pinmux = <PINMUX_GPIO68__FUNC_GPIO68>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -748,40 +748,40 @@
 	/* Set MCLK Pin default mode */
 	camera_pins_default: camdefault {
 		pins_cmd0_dat {
-			pins = <MT8163_PIN_119_CMMCLK__FUNC_CMMCLK>;	/*MCLK*/
+			pinmux = <MT8163_PIN_119_CMMCLK__FUNC_CMMCLK>;	/*MCLK*/
 		};
 		pins_cmd1_dat {
-			pins = <MT8163_PIN_107_RDN2__FUNC_CMDAT8>;
+			pinmux = <MT8163_PIN_107_RDN2__FUNC_CMDAT8>;
 		};
 		pins_cmd2_dat {
-			pins = <MT8163_PIN_108_RDP2__FUNC_CMDAT9>;
+			pinmux = <MT8163_PIN_108_RDP2__FUNC_CMDAT9>;
 		};
 		pins_cmd3_dat {
-			pins = <MT8163_PIN_109_RDN3__FUNC_CMDAT4>;
+			pinmux = <MT8163_PIN_109_RDN3__FUNC_CMDAT4>;
 		};
 		pins_cmd4_dat {
-			pins = <MT8163_PIN_110_RDP3__FUNC_CMDAT5>;
+			pinmux = <MT8163_PIN_110_RDP3__FUNC_CMDAT5>;
 		};
 		pins_cmd5_dat {
-			pins = <MT8163_PIN_111_RCN_A__FUNC_CMDAT6>;
+			pinmux = <MT8163_PIN_111_RCN_A__FUNC_CMDAT6>;
 		};
 		pins_cmd6_dat {
-			pins = <MT8163_PIN_112_RCP_A__FUNC_CMDAT7>;
+			pinmux = <MT8163_PIN_112_RCP_A__FUNC_CMDAT7>;
 		};
 		pins_cmd7_dat {
-			pins = <MT8163_PIN_113_RDN1_A__FUNC_CMDAT2>;
+			pinmux = <MT8163_PIN_113_RDN1_A__FUNC_CMDAT2>;
 		};
 		pins_cmd8_dat {
-			pins = <MT8163_PIN_114_RDP1_A__FUNC_CMDAT3>;
+			pinmux = <MT8163_PIN_114_RDP1_A__FUNC_CMDAT3>;
 		};
 		pins_cmd9_dat {
-			pins = <MT8163_PIN_115_RDN0_A__FUNC_CMHSYNC>;
+			pinmux = <MT8163_PIN_115_RDN0_A__FUNC_CMHSYNC>;
 		};
 		pins_cmd10_dat {
-			pins = <MT8163_PIN_116_RDP0_A__FUNC_CMVSYNC>;
+			pinmux = <MT8163_PIN_116_RDP0_A__FUNC_CMVSYNC>;
 		};
 		pins_cmd11_dat {
-			pins = <MT8163_PIN_120_CMPCLK__FUNC_CMPCLK>;
+			pinmux = <MT8163_PIN_120_CMPCLK__FUNC_CMPCLK>;
 		};
 	};
 
@@ -793,7 +793,7 @@
 
 	CTP_pins_default: eint0default {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
 			slew-rate = <0>;
 			bias-disable;
 		};
@@ -801,7 +801,7 @@
 
 	CTP_pins_eint_as_int: eint@0 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
 			slew-rate = <0>;
 			bias-disable;
 		};
@@ -809,7 +809,7 @@
 
 	CTP_pins_eint_output0: eintoutput0 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -817,7 +817,7 @@
 
 	CTP_pins_eint_output1: eintoutput1 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_GPIO35>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -825,7 +825,7 @@
 
 	CTP_pins_rst_output0: rstoutput0 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
+			pinmux = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -833,7 +833,7 @@
 
 	CTP_pins_rst_output1: rstoutput1 {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
+			pinmux = <MT8163_PIN_46_EINT14__FUNC_GPIO46>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -842,28 +842,28 @@
 /* USB GPIO start */
 	gpio38_mode0_iddig: iddig_irq_init {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
+			pinmux = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
 			bias-pull-up;
 		};
 	};
 
 	gpio38_mode0_iddig_low: iddig_irq_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
+			pinmux = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
 			bias-pull-down;
 		};
 	};
 
 	gpio38_mode0_iddig_high: iddig_irq_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
+			pinmux = <MT8163_PIN_38_KPCOL2__FUNC_GPIO38>;
 			bias-pull-up;
 		};
 	};
 
 	gpio35_mode2_drvvbus: drvvbus_init {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
 			slew-rate = <1>;
 			bias-pull-up = <00>;
 		};
@@ -871,7 +871,7 @@
 
 	gpio35_mode2_drvvbus_low: drvvbus_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -879,7 +879,7 @@
 
 	gpio35_mode2_drvvbus_high: drvvbus_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
+			pinmux = <MT8163_PIN_35_KPROW2__FUNC_USB_DRVVBUS>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -953,7 +953,7 @@
 
 	lcm_pwr_high: lcm_gpio@43_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_43_EINT11__FUNC_GPIO43>;
+			pinmux = <MT8163_PIN_43_EINT11__FUNC_GPIO43>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -961,7 +961,7 @@
 
 	lcm_pwr_low: lcm_gpio@43_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_43_EINT11__FUNC_GPIO43>;
+			pinmux = <MT8163_PIN_43_EINT11__FUNC_GPIO43>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -969,7 +969,7 @@
 
 	lcm_rst_high: lcm_gpio@83_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_83_LCM_RST__FUNC_GPIO83>;
+			pinmux = <MT8163_PIN_83_LCM_RST__FUNC_GPIO83>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -977,7 +977,7 @@
 
 	lcm_rst_low: lcm_gpio@83_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_83_LCM_RST__FUNC_GPIO83>;
+			pinmux = <MT8163_PIN_83_LCM_RST__FUNC_GPIO83>;
 			slew-rate = <1>;
 			output-low;
 		};
@@ -985,7 +985,7 @@
 
 	lcm_pwr_n_high: lcm_gpio@45_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_45_EINT13__FUNC_GPIO45>;
+			pinmux = <MT8163_PIN_45_EINT13__FUNC_GPIO45>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -993,7 +993,7 @@
 
 	lcm_pwr_n_low: lcm_gpio@45_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_45_EINT13__FUNC_GPIO45>;
+			pinmux = <MT8163_PIN_45_EINT13__FUNC_GPIO45>;
 			slew-rate = <1>;
 			output-low;
 		};
