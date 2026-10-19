@@ -587,7 +587,7 @@ int KREE_CreateSessionWithTag(const char *ta_uuid,
 					KREE_SESSION_HANDLE *pHandle,
 					const char *tag)
 {
-#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS)
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
 	(void)tag; /* no support for tags */
 	return KREE_CreateSession(ta_uuid, pHandle);
 #else

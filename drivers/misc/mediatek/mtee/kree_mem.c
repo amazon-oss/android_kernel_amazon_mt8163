@@ -20,7 +20,7 @@
 
 /* #define DBG_KREE_MEM */
 
-#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS)
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
 static inline uint32_t tag_cmd_to_no_tag(uint32_t cmd)
 {
 	switch (cmd) {
@@ -66,7 +66,7 @@ static inline int _allocFunc(uint32_t cmd, KREE_SESSION_HANDLE session,
 	case TZCMD_MEM_SECURECM_ALLOC_WITH_TAG:
 	case TZCMD_MEM_SECUREMEM_ZALLOC_WITH_TAG:
 	case TZCMD_MEM_SECURECM_ZALLOC_WITH_TAG:
-#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS)
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
 		/* no support for tags */
 		ret = KREE_TeeServiceCall(session, tag_cmd_to_no_tag(cmd),
 					TZ_ParamTypes3(TZPT_VALUE_INPUT,
@@ -151,7 +151,7 @@ static inline int _handleOpFunc_1(uint32_t cmd,
 }
 
 
-#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS)
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
 int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 					KREE_SHAREDMEM_HANDLE *mem_handle,
 					void *start, uint32_t size, void *map_p,
