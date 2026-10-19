@@ -135,6 +135,7 @@
 	rbat_pull_up_volt = <1800>;
 
 	step_of_qmax = <60>; /* Unit: mAh */
+	std_loading_current = <6000>; /* Unit: 0.1mA */
 
 	batt_temperature_table_num = <17>;
 	batt_temperature_table = <
