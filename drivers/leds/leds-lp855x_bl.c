@@ -22,7 +22,7 @@
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 #include <linux/platform_data/mtk_thermal.h>
-#include "../misc/mediatek/include/mt-plat/mt_boot_common.h"
+#include "../misc/mediatek/include/mt-plat/mtk_boot_common.h"
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #include <linux/earlysuspend.h>
@@ -856,7 +856,8 @@ static int lp855x_remove(struct i2c_client *cl)
 }
 
 #ifdef CONFIG_PM
-static int lp855x_suspend(struct i2c_client *client, pm_message_t mesg)
+static int __maybe_unused lp855x_suspend(struct i2c_client *client,
+					 pm_message_t mesg)
 {
 	struct lp855x *lp = i2c_get_clientdata(client);
 
@@ -872,7 +873,7 @@ static int lp855x_suspend(struct i2c_client *client, pm_message_t mesg)
 	return 0;
 }
 
-static int lp855x_resume(struct i2c_client *client)
+static int __maybe_unused lp855x_resume(struct i2c_client *client)
 {
 #if 0
 	struct lp855x *lp = i2c_get_clientdata(client);
@@ -939,11 +940,6 @@ static void lp855x_late_resume(struct early_suspend *es)
 		dev_err(lp->dev, "%s: failed\n", __func__);
 }
 
-#else
-static const struct dev_pm_ops lp855x_pm_ops = {
-	.suspend	= lp855x_suspend,
-	.resume		= lp855x_resume,
-};
 #endif
 #endif
 
