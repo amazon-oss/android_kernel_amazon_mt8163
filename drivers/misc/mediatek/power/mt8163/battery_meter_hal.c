@@ -30,7 +30,11 @@
 signed int chip_diff_trim_value_4_0;
 signed int chip_diff_trim_value; /* unit = 0.1*/
 
+#if defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+signed int g_hw_ocv_tune_value = 8;
+#else
 signed int g_hw_ocv_tune_value;
+#endif
 
 /*============================================================ */
 /*function prototype*/
