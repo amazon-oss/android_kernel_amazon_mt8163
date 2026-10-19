@@ -489,7 +489,7 @@
 	pinctrl-1 = <&mmc0_pins_uhs>;
 	status = "okay";
 	bus-width = <8>;
-	latch-ck = <1>;
+	mediatek,latch-ck = <1>;
 	max-frequency = <200000000>;
 	cap-mmc-highspeed;
 	mmc-hs200-1_8v;
@@ -505,7 +505,7 @@
 	pinctrl-1 = <&mmc1_pins_uhs>;
 	status = "okay";
 	bus-width = <4>;
-	latch-ck = <1>;
+	mediatek,latch-ck = <1>;
 	max-frequency = <200000000>;
 	cap-sd-highspeed;
 	sd-uhs-sdr50;
