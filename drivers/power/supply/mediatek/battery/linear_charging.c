@@ -257,7 +257,7 @@ unsigned int do_jeita_state_machine(void)
 	return PMU_STATUS_OK;
 }
 
-#ifdef CONFIG_DOUGLAS
+#if defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
 static void set_jeita_charging_current(void)
 {
 	static bool above_4000;
