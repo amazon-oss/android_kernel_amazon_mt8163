@@ -481,7 +481,12 @@ static int mtk_wdt_probe(struct platform_device *pdev)
 
 	watchdog_set_drvdata(&mtk_wdt->wdt_dev, mtk_wdt);
 
+#if defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+	mtk_wdt_start(&mtk_wdt->wdt_dev);
+	set_bit(WDOG_HW_RUNNING, &mtk_wdt->wdt_dev.status);
+#else
 	mtk_wdt_stop(&mtk_wdt->wdt_dev);
+#endif
 
 	err = watchdog_register_device(&mtk_wdt->wdt_dev);
 	if (unlikely(err))
@@ -536,7 +541,8 @@ static void mtk_wdt_shutdown(struct platform_device *pdev)
 {
 	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
 
-	if (watchdog_active(&mtk_wdt->wdt_dev))
+	if (watchdog_active(&mtk_wdt->wdt_dev) ||
+	    watchdog_hw_running(&mtk_wdt->wdt_dev))
 		mtk_wdt_stop(&mtk_wdt->wdt_dev);
 }
 
@@ -562,7 +568,8 @@ static int mtk_wdt_suspend(struct device *dev)
 {
 	struct mtk_wdt_dev *mtk_wdt = dev_get_drvdata(dev);
 
-	if (watchdog_active(&mtk_wdt->wdt_dev))
+	if (watchdog_active(&mtk_wdt->wdt_dev) ||
+	    watchdog_hw_running(&mtk_wdt->wdt_dev))
 		mtk_wdt_stop(&mtk_wdt->wdt_dev);
 
 	return 0;
@@ -572,7 +579,8 @@ static int mtk_wdt_resume(struct device *dev)
 {
 	struct mtk_wdt_dev *mtk_wdt = dev_get_drvdata(dev);
 
-	if (watchdog_active(&mtk_wdt->wdt_dev)) {
+	if (watchdog_active(&mtk_wdt->wdt_dev) ||
+	    watchdog_hw_running(&mtk_wdt->wdt_dev)) {
 		mtk_wdt_start(&mtk_wdt->wdt_dev);
 		mtk_wdt_ping(&mtk_wdt->wdt_dev);
 	}
@@ -588,8 +596,8 @@ static const struct of_device_id mtk_wdt_dt_ids[] = {
 MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
 
 static const struct dev_pm_ops mtk_wdt_pm_ops = {
-	SET_SYSTEM_SLEEP_PM_OPS(mtk_wdt_suspend,
-				mtk_wdt_resume)
+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_wdt_suspend,
+				      mtk_wdt_resume)
 };
 
 static struct platform_driver mtk_wdt_driver = {
