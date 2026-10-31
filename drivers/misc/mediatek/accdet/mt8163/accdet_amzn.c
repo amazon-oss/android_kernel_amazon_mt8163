@@ -269,6 +269,13 @@ static inline int accdet_setup_eint(struct platform_device *accdet_device)
 		gpio_set_debounce(gpiopin, accdet_dts_data.eint_debounce);
 
 		accdet_irq = irq_of_parse_and_map(node, 0);
+
+		/* Work thread of gpio interrupts */
+		accdet_eint_wq = create_singlethread_workqueue("accdet_eint");
+		INIT_WORK(&accdet_eint_work, accdet_eint_work_callback);
+
+		initialized = true;
+
 		ret = request_irq(accdet_irq, accdet_irq_callback,
 			IRQF_TRIGGER_NONE, "accdet-eint", NULL);
 		if (ret != 0) {
@@ -428,12 +435,6 @@ int mt_accdet_probe(struct platform_device *dev)
 			ret);
 		goto clean_kpd;
 	}
-	/* Work thread of gpio interrupts */
-	accdet_eint_wq = create_singlethread_workqueue("accdet_eint");
-	INIT_WORK(&accdet_eint_work, accdet_eint_work_callback);
-
-	initialized = true;
-
 	accdet_report_status();
 
 	ACCDET_INFO("[accdet]%s-\n", __func__);
