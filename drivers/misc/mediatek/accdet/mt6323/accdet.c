@@ -428,7 +428,7 @@ bool Vcamaf_Regulator_PowerOnOFF(struct regulator *pwrreg, int IsOn, int vol)
 		/*last time settings/Highest vol */
 		voltage_count = regulator_count_voltages(pwrreg);
 		if (voltage_count <= 0) {
-			ACCDET_DEBUG("Fails to count, voltage_count = %d"
+			ACCDET_DEBUG("Fails to count, voltage_count = %d",
 				voltage_count);
 			return false;
 		}
