@@ -109,6 +109,10 @@ static void mtee_clks_init(struct platform_device *pdev)
 			continue;
 		}
 
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+		clk_prepare_enable(clk);
+#endif
+
 		mtee_clk = kzalloc(sizeof(struct mtee_clk), GFP_KERNEL);
 		strncpy(mtee_clk->clk_name, clk_name, CLK_NAME_LEN-1);
 		mtee_clk->clk = clk;
