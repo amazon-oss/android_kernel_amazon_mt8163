@@ -917,8 +917,15 @@ static int key_check(int b)
 
 #endif
 
+void __weak AudDrv_GPIO_Headset_Changed(bool plugged)
+{
+}
+
 static void send_accdet_status_event(int cable_type, int status)
 {
+	if (cable_type == HEADSET_NO_MIC || cable_type == HEADSET_MIC)
+		AudDrv_GPIO_Headset_Changed(status);
+
 	switch (cable_type) {
 	case HEADSET_NO_MIC:
 		input_report_switch(kpd_accdet_dev, SW_HEADPHONE_INSERT,
