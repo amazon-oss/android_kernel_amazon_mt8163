@@ -179,7 +179,11 @@ int KREE_TeeServiceCallNoCheck(KREE_SESSION_HANDLE handle,
 	return (int) tz_service_call(&smc_arg);
 }
 #else /* ~CONFIG_TRUSTY */
+#if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+#define SMC_MTEE_SERVICE_CALL (0x32000008)
+#else
 #define SMC_MTEE_SERVICE_CALL (0x72000008)
+#endif
 #define SMC_MTEE32_SERVICE_CALL (0x32000008)
 static u32 tz_service_call(u32 handle, u32 op, u32 arg1, unsigned long arg2)
 {
