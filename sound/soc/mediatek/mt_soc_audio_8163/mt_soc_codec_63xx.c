@@ -1018,29 +1018,29 @@ static void HeadsetVoloumeRestore(void)
 #endif
 }
 
+#define HEADSET_GAIN_BOOST_DB 12
+
+static unsigned int HeadsetGainReg(int index)
+{
+	if (AudDrv_GPIO_Headset_Boost())
+		index -= HEADSET_GAIN_BOOST_DB / 2;
+	return 7 - clamp(index, 0, 7);
+}
+
+void UpdateHeadsetGain(void)
+{
+	if (!mCodec_data)
+		return;
+
+	Ana_Set_Reg(AUDTOP_CON5, HeadsetGainReg(mCodec_data->mAudio_Ana_Volume[
+		AUDIO_ANALOG_VOLUME_HPOUTL]) << 12, 0x00007000);
+	Ana_Set_Reg(AUDTOP_CON5, HeadsetGainReg(mCodec_data->mAudio_Ana_Volume[
+		AUDIO_ANALOG_VOLUME_HPOUTR]) << 8, 0x00000700);
+}
+
 static void HeadsetVolumeSet(void)
 {
-	/* Left channel */
-	int index = mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTL];
-	int index2 = 7;
-
-	pr_debug("%s(), Lindex = %d\n", __func__, index);
-	/* gain[] = {-5, -3, -1, 1, 3, 5, 7, 9}; */
-	if (index > index2)
-		index = index2;
-	index2 -= index;
-	pr_debug("%s(), Lindex = %d, Lindex2 = %d\n", __func__, index, index2);
-	Ana_Set_Reg(AUDTOP_CON5, index2 << 12, 0x00007000);
-	/* right channel */
-	index = mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTR];
-	index2 = 7;
-	/* gain[] = {-5, -3, -1, 1, 3, 5, 7, 9}; */
-	pr_debug("%s(), Rindex = %d\n", __func__, index);
-	if (index > index2)
-		index = index2;
-	index2 -= index;
-	pr_debug("%s(), Rindex = %d, Rindex2 = %d\n", __func__, index, index2);
-	Ana_Set_Reg(AUDTOP_CON5, index2 << 8, 0x000000700);
+	UpdateHeadsetGain();
 }
 
 static void Audio_Amp_Change(int channels, bool enable)
@@ -2261,11 +2261,8 @@ static int Headset_PGAL_Set(struct snd_kcontrol *kcontrol,
 	index = ucontrol->value.integer.value[0];
 	if (index > index2)
 		index = index2;
-	index2 -= index;
-	pr_debug("%s(), index = %d, index2 = %d\n", __func__, index, index2);
-	Ana_Set_Reg(AUDTOP_CON5, index2 << 12, 0x00007000);
-	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTL] =
-	    ucontrol->value.integer.value[0];
+	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTL] = index;
+	UpdateHeadsetGain();
 	return 0;
 }
 
@@ -2297,11 +2294,8 @@ static int Headset_PGAR_Set(struct snd_kcontrol *kcontrol,
 	index = ucontrol->value.integer.value[0];
 	if (index > index2)
 		index = index2;
-	index2 -= index;
-	pr_debug("%s(), index = %d, index2 = %d\n", __func__, index, index2);
-	Ana_Set_Reg(AUDTOP_CON5, index2 << 8, 0x000000700);
-	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTR] =
-	    ucontrol->value.integer.value[0];
+	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_HPOUTR] = index;
+	UpdateHeadsetGain();
 	return 0;
 }
 

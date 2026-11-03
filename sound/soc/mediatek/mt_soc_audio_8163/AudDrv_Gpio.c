@@ -31,6 +31,7 @@
 #include <mt-plat/mt_gpio.h>
 #endif
 #include "AudDrv_Gpio.h"
+#include "mt_soc_codec_63xx.h"
 
 #if !defined(CONFIG_MTK_LEGACY)
 struct pinctrl *pinctrlaud;
@@ -380,9 +381,19 @@ void AudDrv_GPIO_Headset_Changed(bool plugged)
 {
 	mutex_lock(&aud_amp_mutex);
 	aud_amp_headset = plugged;
-	if (aud_amp_headset_switch)
+	if (aud_amp_headset_switch) {
+		if (!plugged)
+			UpdateHeadsetGain();
 		AudDrv_GPIO_Amp_Apply();
+		if (plugged)
+			UpdateHeadsetGain();
+	}
 	mutex_unlock(&aud_amp_mutex);
+}
+
+bool AudDrv_GPIO_Headset_Boost(void)
+{
+	return aud_amp_headset_switch && aud_amp_headset;
 }
 
 #endif

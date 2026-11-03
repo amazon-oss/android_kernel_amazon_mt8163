@@ -35,6 +35,7 @@ void SetAnalogSuspend(bool bEnable);
 void OpenTrimBufferHardware(bool bEnable);
 void setHpDcCalibration(unsigned int type, int dc_cali_value);
 void setHpDcCalibrationGain(unsigned int type, int gain_value);
+void UpdateHeadsetGain(void);
 
 
 #endif
