@@ -54,6 +54,7 @@ int AudDrv_GPIO_EXTAMP_Select(int bEnable);
 int AudDrv_GPIO_EXTAMP_Gain_Set(int value);
 int AudDrv_GPIO_HP_SPK_Switch_Select(int bEnable);
 int AudDrv_GPIO_EXTHPAMP_Select(int bEnable);
+void AudDrv_GPIO_Headset_Changed(bool plugged);
 
 #endif
 

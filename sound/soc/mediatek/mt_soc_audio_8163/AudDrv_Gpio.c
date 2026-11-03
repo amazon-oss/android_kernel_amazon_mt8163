@@ -24,6 +24,8 @@
 
 #if !defined(CONFIG_MTK_LEGACY)
 #include <linux/gpio.h>
+#include <linux/mutex.h>
+#include <linux/of.h>
 #include <linux/pinctrl/consumer.h>
 #else
 #include <mt-plat/mt_gpio.h>
@@ -77,6 +79,11 @@ static struct audio_gpio_attr aud_gpios[GPIO_NUM] = {
 	[GPIO_HPAMP_LOW] = {"hpamp-pulllow", false, NULL},
 };
 
+static DEFINE_MUTEX(aud_amp_mutex);
+static bool aud_amp_headset_switch;
+static bool aud_amp_headset;
+static bool aud_extamp_on;
+static bool aud_hpamp_on;
 
 void AudDrv_GPIO_probe(void *dev)
 {
@@ -105,6 +112,9 @@ void AudDrv_GPIO_probe(void *dev)
 				__func__, aud_gpios[i].name);
 		}
 	}
+
+	aud_amp_headset_switch = of_property_read_bool(
+		((struct device *)dev)->of_node, "mediatek,headset-amp-switch");
 }
 
 int AudDrv_GPIO_PMIC_Select(int bEnable)
@@ -170,7 +180,7 @@ int AudDrv_GPIO_I2S_Select(int bEnable)
 	return retval;
 }
 
-int AudDrv_GPIO_EXTAMP_Select(int bEnable)
+static int AudDrv_GPIO_EXTAMP_Set(int bEnable)
 {
 	int retval = 0;
 
@@ -296,7 +306,7 @@ int AudDrv_GPIO_HP_SPK_Switch_Select(int bEnable)
 	return retval;
 }
 
-int AudDrv_GPIO_EXTHPAMP_Select(int bEnable)
+static int AudDrv_GPIO_EXTHPAMP_Set(int bEnable)
 {
 	int retval = 0;
 
@@ -328,5 +338,51 @@ int AudDrv_GPIO_EXTHPAMP_Select(int bEnable)
 	return retval;
 }
 
+static void AudDrv_GPIO_Amp_Apply(void)
+{
+	bool spk = aud_extamp_on && !aud_amp_headset;
+	bool hp = aud_hpamp_on || (aud_extamp_on && aud_amp_headset);
+
+	if (spk) {
+		AudDrv_GPIO_EXTHPAMP_Set(hp);
+		AudDrv_GPIO_EXTAMP_Set(true);
+	} else {
+		AudDrv_GPIO_EXTAMP_Set(false);
+		AudDrv_GPIO_EXTHPAMP_Set(hp);
+	}
+}
+
+int AudDrv_GPIO_EXTAMP_Select(int bEnable)
+{
+	if (!aud_amp_headset_switch)
+		return AudDrv_GPIO_EXTAMP_Set(bEnable);
+
+	mutex_lock(&aud_amp_mutex);
+	aud_extamp_on = bEnable;
+	AudDrv_GPIO_Amp_Apply();
+	mutex_unlock(&aud_amp_mutex);
+	return 0;
+}
+
+int AudDrv_GPIO_EXTHPAMP_Select(int bEnable)
+{
+	if (!aud_amp_headset_switch)
+		return AudDrv_GPIO_EXTHPAMP_Set(bEnable);
+
+	mutex_lock(&aud_amp_mutex);
+	aud_hpamp_on = bEnable;
+	AudDrv_GPIO_Amp_Apply();
+	mutex_unlock(&aud_amp_mutex);
+	return 0;
+}
+
+void AudDrv_GPIO_Headset_Changed(bool plugged)
+{
+	mutex_lock(&aud_amp_mutex);
+	aud_amp_headset = plugged;
+	if (aud_amp_headset_switch)
+		AudDrv_GPIO_Amp_Apply();
+	mutex_unlock(&aud_amp_mutex);
+}
 
 #endif
