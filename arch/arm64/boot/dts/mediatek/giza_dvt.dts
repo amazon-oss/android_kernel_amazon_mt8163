@@ -162,6 +162,11 @@
 	status = "okay";
 };
 
+&mtee {
+	clocks = <&infracfg CLK_INFRA_GCPU>, <&infracfg CLK_INFRA_SEJ>;
+	clock-names = "GCPU", "SEJ";
+};
+
 &audiosys {
 	/*0:Stereo, 1:MonoLeft, 2:MonoRight*/
 	channel-type = <0>;
