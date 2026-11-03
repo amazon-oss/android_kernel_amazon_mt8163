@@ -16,6 +16,7 @@
 #include "trustzone/kree/system.h"
 #include <tz_cross/ta_mem.h>
 #include <linux/mm.h>
+#include <linux/slab.h>
 
 
 /* #define DBG_KREE_MEM */
@@ -152,6 +153,27 @@ static inline int _handleOpFunc_1(uint32_t cmd,
 
 
 #if defined(CONFIG_ROOK) || defined(CONFIG_DOUGLAS) || defined(CONFIG_GIZA)
+static uint32_t *kree_legacy_page_list(const uint64_t *map64)
+{
+	uint32_t *map32;
+	uint64_t i;
+
+	map32 = kmalloc_array(map64[0] + 1, sizeof(*map32), GFP_KERNEL);
+	if (map32 == NULL)
+		return NULL;
+
+	map32[0] = map64[0];
+	for (i = 1; i <= map64[0]; i++) {
+		if (map64[i] > U32_MAX) {
+			kfree(map32);
+			return NULL;
+		}
+		map32[i] = map64[i];
+	}
+
+	return map32;
+}
+
 int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 					KREE_SHAREDMEM_HANDLE *mem_handle,
 					void *start, uint32_t size, void *map_p,
@@ -160,6 +182,12 @@ int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 	union MTEEC_PARAM p[4];
 	int ret;
 	(void)tag; /* no support for tags */
+
+	if (map_p != NULL) {
+		map_p = kree_legacy_page_list(map_p);
+		if (map_p == NULL)
+			return TZ_RESULT_ERROR_BAD_PARAMETERS;
+	}
 
 	p[0].value.a = (unsigned long)start;
 	p[0].value.b = (unsigned long long)(unsigned long)start >> 32;
@@ -175,6 +203,7 @@ int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 							TZPT_MEM_INPUT,
 							TZPT_VALUE_OUTPUT),
 					p);
+	kfree(map_p);
 	if (ret != TZ_RESULT_SUCCESS) {
 		*mem_handle = 0;
 		return ret;
