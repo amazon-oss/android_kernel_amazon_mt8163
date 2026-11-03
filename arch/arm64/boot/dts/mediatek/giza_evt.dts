@@ -164,6 +164,7 @@
 	pinctrl-6 = <&aud_pins_extamp_low>;
 	pinctrl-7 = <&aud_pins_hpamp_high>;
 	pinctrl-8 = <&aud_pins_hpamp_low>;
+	mediatek,headset-amp-switch;
 	status = "okay";
 };
 
