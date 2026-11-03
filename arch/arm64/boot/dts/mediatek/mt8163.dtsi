@@ -1893,7 +1893,7 @@
 			compatible = "mediatek,mt8163-isp_sysram";
 		};
 
-		mtee {
+		mtee: mtee {
 			compatible = "mediatek,mtee";
 			clocks = <&infracfg CLK_INFRA_GCPU>;
 			clock-names = "GCPU";
